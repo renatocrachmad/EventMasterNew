@@ -1,0 +1,485 @@
+/* Cadastro Page Styles */
+.cadastro-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cadastro-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+}
+
+.cadastro-container {
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  z-index: 1;
+}
+
+.cadastro-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.cadastro-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.cadastro-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.cadastro-header p {
+  color: #6b7280;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.cadastro-form {
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  margin-bottom: 1.25rem;
+}
+
+.input-group label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #9ca3af;
+  z-index: 1;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.input-container input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-container input::placeholder {
+  color: #9ca3af;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+  color: #6b7280;
+}
+
+.terms-container {
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  margin-top: 0.125rem;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
+  background: #667eea;
+  border-color: #667eea;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.terms-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.terms-link:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+.cadastro-button {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cadastro-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.cadastro-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cadastro-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.social-signup {
+  margin-bottom: 1.5rem;
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.divider span {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0 1rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.social-button:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+  transform: translateY(-1px);
+}
+
+.social-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cadastro-footer {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cadastro-footer p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link-button:hover {
+  color: #5a67d8;
+  text-decoration: underline;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Modal Container */
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 90%;
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+}
+
+.modal-content p {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.modal-buttons button:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .cadastro-page {
+    padding: 0.5rem;
+  }
+
+  .cadastro-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+    max-height: 95vh;
+  }
+
+  .cadastro-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .social-buttons {
+    flex-direction: column;
+  }
+
+  .social-button {
+    justify-content: center;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .cadastro-card {
+    background: rgba(31, 41, 55, 0.95);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+  }
+
+  .cadastro-header h1 {
+    color: #f9fafb;
+  }
+
+  .cadastro-header p {
+    color: #d1d5db;
+  }
+
+  .input-group label {
+    color: #f3f4f6;
+  }
+
+  .input-container input {
+    background: rgba(55, 65, 81, 0.5);
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+
+  .input-container input::placeholder {
+    color: #9ca3af;
+  }
+
+  .checkbox-label {
+    color: #f3f4f6;
+  }
+
+  .social-button {
+    background: rgba(55, 65, 81, 0.5);
+    border-color: #4b5563;
+    color: #f3f4f6;
+  }
+
+  .cadastro-footer p {
+    color: #d1d5db;
+  }
+
+  .divider span {
+    background: rgba(31, 41, 55, 0.95);
+    color: #9ca3af;
+  }
+
+  .modal-content {
+    background: rgba(31, 41, 55, 0.95);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+  }
+
+  .modal-content h2 {
+    color: #f9fafb;
+  }
+
+  .modal-content p {
+    color: #d1d5db;
+  }
+}

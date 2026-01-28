@@ -1,0 +1,104 @@
+.reschedule-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reschedule-modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.reschedule-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.reschedule-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+  text-align: center;
+}
+
+.reschedule-modal-form label {
+  font-weight: 600;
+  color: #374151;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.input-with-icon {
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  padding: 0.5rem;
+  border-radius: 8px;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-with-icon input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.input-with-icon input:focus {
+  outline: none;
+}
+
+.reschedule-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.save-button {
+  background: #10b981;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background: #059669;
+}
+
+.cancel-button {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background: #e5e7eb;
+}

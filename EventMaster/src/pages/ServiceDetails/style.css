@@ -1,0 +1,127 @@
+/* Animação de loading personalizada */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Scroll suave para a galeria de miniaturas */
+.gallery-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.gallery-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.gallery-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.gallery-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Efeitos de transição suaves */
+.smooth-transition {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Garantir que o backdrop blur funcione */
+.backdrop-blur-custom {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Sombras personalizadas */
+.shadow-custom {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-custom-hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Garantir que os ícones do Lucide tenham o tamanho correto */
+.lucide {
+  flex-shrink: 0;
+}
+
+/* Responsividade adicional para dispositivos muito pequenos */
+@media (max-width: 375px) {
+  .service-details-mobile {
+    padding: 0.75rem;
+  }
+  
+  .service-details-mobile .text-3xl {
+    font-size: 1.5rem;
+  }
+  
+  .service-details-mobile .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Melhorar a aparência dos selects em dispositivos móveis */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+/* Garantir que o modal seja sempre visível */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+/* Melhorar a aparência dos botões de horário */
+.time-slot-button {
+  min-height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Garantir que as imagens não quebrem o layout */
+.service-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Melhorar a legibilidade em telas pequenas */
+@media (max-width: 640px) {
+  .service-card-mobile {
+    padding: 1rem;
+  }
+  
+  .service-card-mobile h2 {
+    font-size: 1.25rem;
+  }
+  
+  .service-card-mobile .grid-cols-3 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .service-card-mobile .flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
