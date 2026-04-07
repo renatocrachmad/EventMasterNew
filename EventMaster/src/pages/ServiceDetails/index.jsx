@@ -12,6 +12,7 @@ import {
   AlertCircle,
   User,
   Award,
+  FileText,
 } from 'lucide-react';
 import ContactModal from '../../components/ContactModal';
 import { addBooking, isTimeAvailable } from '../../services/bookingService';
@@ -33,55 +34,229 @@ const ServiceDetails = () => {
 
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [budgetForm, setBudgetForm] = useState({
+    clientName: '',
+    clientEmail: '',
+    clientPhone: '',
+    eventDate: '',
+    guests: '',
+    message: ''
+  });
 
   const availableSlots = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00'];
 
   const mockServiceDetails = {
     1: {
       id: 1,
-      name: 'Oficina do João',
-      description: 'Especializada em mecânica geral, oferecemos serviços de qualidade com profissionais experientes.',
-      rating: 4.8,
-      reviews: 127,
-      distance: '1.2 km',
-      address: 'Rua das Flores, 123 - Centro',
-      phone: '(11) 99999-1234',
-      email: 'contato@oficinajao.com.br',
-      image: 'https://via.placeholder.com/800x400/4f46e5/ffffff?text=Oficina+do+João',
+      name: 'Sabor & Festa Buffet',
+      description: 'Buffet completo para casamentos e eventos corporativos com cardápio personalizado.',
+      rating: 4.9,
+      reviews: 156,
+      distance: '2.5 km',
+      address: 'Av. das Festas, 100 - Centro',
+      phone: '(11) 99999-1111',
+      email: 'contato@saborefesta.com.br',
+      image: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=800&h=400',
       gallery: [
-        'https://via.placeholder.com/400x300/6366f1/ffffff?text=Galeria+1',
-        'https://via.placeholder.com/400x300/8b5cf6/ffffff?text=Galeria+2',
-        'https://via.placeholder.com/400x300/06b6d4/ffffff?text=Galeria+3',
+        'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=400&h=300',
+        'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=400&h=300',
+        'https://images.unsplash.com/photo-1519225468063-3f83797b2f42?auto=format&fit=crop&q=80&w=400&h=300',
       ],
       services: [
-        { name: 'Troca de óleo', price: 'R$ 80,00', duration: '30 min' },
-        { name: 'Revisão completa', price: 'R$ 250,00', duration: '2 horas' },
-        { name: 'Alinhamento e balanceamento', price: 'R$ 120,00', duration: '1 hora' },
-        { name: 'Troca de pastilhas de freio', price: 'R$ 180,00', duration: '45 min' },
+        { name: 'Jantar Completo', price: 'R$ 120,00/pessoa', duration: '4 horas' },
+        { name: 'Coquetel Volante', price: 'R$ 80,00/pessoa', duration: '3 horas' },
+        { name: 'Ilha de Bebidas', price: 'R$ 45,00/pessoa', duration: '4 horas' },
+        { name: 'Equipe de Garçons', price: 'R$ 200,00/garçom', duration: 'Evento' },
       ],
       openTime: '08:00 - 18:00',
       workingDays: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-      owner: 'João Silva',
-      experience: '15 anos',
-      certifications: ['Certificado Bosch'],
-      about: 'Nossa oficina é especializada em mecânica geral e oferece serviços de qualidade com mais de 15 anos de experiência no mercado. Contamos com profissionais qualificados e equipamentos modernos para garantir o melhor atendimento aos nossos clientes. Trabalhamos com todas as marcas de veículos e oferecemos garantia em todos os nossos serviços.',
+      owner: 'Ana Pereira',
+      experience: '12 anos',
+      certifications: ['Segurança Alimentar', 'Gastronomia Internacional'],
+      about: 'A Sabor & Festa Buffet atua há mais de 12 anos no mercado de eventos, proporcionando experiências gastronômicas únicas. Nossa equipe é formada por chefs renomados e profissionais dedicados a tornar seu casamento, aniversário ou evento corporativo um sucesso absoluto.',
       reviews_list: [
         { 
           id: 1, 
-          user: 'Maria Santos', 
+          user: 'Fernanda Lima', 
           rating: 5, 
-          comment: 'Excelente atendimento! Serviço de qualidade e preço justo.', 
-          date: '2024-01-15' 
+          comment: 'Comida maravilhosa e serviço impecável! Todos os convidados elogiaram.', 
+          date: '2024-02-20' 
         },
         { 
           id: 2, 
-          user: 'Carlos Silva', 
-          rating: 4, 
-          comment: 'Muito bom! Recomendo a todos.', 
-          date: '2024-01-10' 
+          user: 'Roberto Souza', 
+          rating: 5, 
+          comment: 'Profissionalismo nota 10. O jantar estava divino.', 
+          date: '2024-02-15' 
         },
       ],
     },
+    2: {
+      id: 2,
+      name: "Flores & Cores Decorações",
+      description: "Projetos de decoração floral e ambientação para tornar seu evento único.",
+      rating: 4.8,
+      reviews: 98,
+      distance: "3.2 km",
+      address: "Rua das Orquídeas, 55 - Jardim",
+      phone: "(11) 99999-2222",
+      email: "contato@floresecores.com",
+      image: "https://images.unsplash.com/photo-1519225468063-3f83797b2f42?auto=format&fit=crop&q=80&w=800&h=400",
+      gallery: [
+        "https://images.unsplash.com/photo-1478146059778-26028b07395a?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=400&h=300"
+      ],
+      services: [
+        { name: "Decoração Completa Casamento", price: "R$ 5.000,00", duration: "Projeto" },
+        { name: "Arranjos de Mesa", price: "R$ 150,00/un", duration: "Unidade" },
+        { name: "Buquê de Noiva", price: "R$ 450,00", duration: "Unidade" },
+        { name: "Iluminação Cênica", price: "R$ 1.200,00", duration: "Evento" }
+      ],
+      openTime: "08:00 - 19:00",
+      workingDays: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
+      owner: "Mariana Costa",
+      experience: "8 anos",
+      certifications: ["Design Floral", "Ambientação de Eventos"],
+      about: "Transformamos sonhos em realidade através das flores e cores. Especialistas em criar ambientes mágicos e acolhedores para o seu grande dia.",
+      reviews_list: [
+        { id: 1, user: "Julia Martins", rating: 5, comment: "Minha festa ficou linda, parecia um conto de fadas!", date: "2024-01-10" },
+        { id: 2, user: "Pedro Alves", rating: 4, comment: "Ótimo atendimento e muito bom gosto.", date: "2023-12-05" }
+      ]
+    },
+    3: {
+      id: 3,
+      name: "DJ Night Beat",
+      description: "A melhor seleção musical e estrutura de som e luz para sua pista de dança.",
+      rating: 4.7,
+      reviews: 210,
+      distance: "5.0 km",
+      address: "Atendimento no local do evento",
+      phone: "(11) 99999-3333",
+      email: "dj@nightbeat.com",
+      image: "https://images.unsplash.com/photo-1516280440614-6697288d5d38?auto=format&fit=crop&q=80&w=800&h=400",
+      gallery: [
+        "https://images.unsplash.com/photo-1571266028243-3716f02d2d2e?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=400&h=300"
+      ],
+      services: [
+        { name: "Pacote DJ + Som", price: "R$ 2.500,00", duration: "5 horas" },
+        { name: "Iluminação Pista", price: "R$ 800,00", duration: "Evento" },
+        { name: "Pista de LED", price: "R$ 1.500,00", duration: "Evento" },
+        { name: "Hora Adicional", price: "R$ 400,00", duration: "1 hora" }
+      ],
+      openTime: "24h",
+      workingDays: ["Todos os dias"],
+      owner: "Carlos 'Beat' Oliveira",
+      experience: "10 anos",
+      certifications: ["Produção Musical", "Técnico de Som"],
+      about: "Levamos a energia certa para a sua festa! Repertório personalizado e equipamentos de última geração para garantir que ninguém fique parado.",
+      reviews_list: [
+        { id: 1, user: "Lucas Mendes", rating: 5, comment: "O DJ mandou muito bem, a pista bombou a noite toda!", date: "2024-03-01" },
+        { id: 2, user: "Camila Rocha", rating: 4, comment: "Ótima estrutura de som.", date: "2024-02-28" }
+      ]
+    },
+    4: {
+      id: 4,
+      name: "Memórias em Foco",
+      description: "Fotografia e filmagem profissional para eternizar os momentos especiais.",
+      rating: 5.0,
+      reviews: 134,
+      distance: "1.8 km",
+      address: "Rua da Imagem, 42 - Vila Nova",
+      phone: "(11) 99999-4444",
+      email: "contato@memoriasemfoco.com",
+      image: "https://images.unsplash.com/photo-1520854221256-17451cc330e7?auto=format&fit=crop&q=80&w=800&h=400",
+      gallery: [
+        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1537907690979-ee8e29932c4f?auto=format&fit=crop&q=80&w=400&h=300"
+      ],
+      services: [
+        { name: "Cobertura Fotográfica", price: "R$ 3.000,00", duration: "8 horas" },
+        { name: "Filmagem 4K", price: "R$ 3.500,00", duration: "8 horas" },
+        { name: "Ensaio Pré-Wedding", price: "R$ 800,00", duration: "3 horas" },
+        { name: "Álbum Impresso", price: "R$ 1.200,00", duration: "Unidade" }
+      ],
+      openTime: "09:00 - 20:00",
+      workingDays: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+      owner: "Ricardo Santos",
+      experience: "15 anos",
+      certifications: ["Fotografia Artística", "Edição Avançada"],
+      about: "Capturamos emoções e contamos histórias através de nossas lentes. Cada clique é pensado para eternizar a beleza e a espontaneidade do seu evento.",
+      reviews_list: [
+        { id: 1, user: "Beatriz Silva", rating: 5, comment: "As fotos ficaram incríveis, emocionantes!", date: "2024-01-20" },
+        { id: 2, user: "João Paulo", rating: 5, comment: "Equipe super discreta e atenciosa.", date: "2024-01-15" }
+      ]
+    },
+    5: {
+      id: 5,
+      name: "Espaço Cristal",
+      description: "Salão de festas luxuoso com capacidade para 300 pessoas e área externa.",
+      rating: 4.6,
+      reviews: 87,
+      distance: "8.5 km",
+      address: "Estrada do Campo, km 12",
+      phone: "(11) 99999-5555",
+      email: "reservas@espacocristal.com",
+      image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800&h=400",
+      gallery: [
+        "https://images.unsplash.com/photo-1519225468063-3f83797b2f42?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1464366400600-7168b8af0bc3?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&q=80&w=400&h=300"
+      ],
+      services: [
+        { name: "Aluguel Salão Principal", price: "R$ 8.000,00", duration: "Diária" },
+        { name: "Cerimônia no Jardim", price: "R$ 2.000,00", duration: "Período" },
+        { name: "Serviço de Valet", price: "R$ 1.500,00", duration: "Evento" },
+        { name: "Segurança", price: "R$ 1.000,00", duration: "Evento" }
+      ],
+      openTime: "Visitas agendadas",
+      workingDays: ["Terça a Domingo"],
+      owner: "Grupo Cristal Eventos",
+      experience: "20 anos",
+      certifications: ["AVCB em dia", "Acessibilidade"],
+      about: "O Espaço Cristal é o cenário perfeito para o seu sonho. Com arquitetura moderna e integração com a natureza, oferecemos infraestrutura completa para eventos sociais e corporativos.",
+      reviews_list: [
+        { id: 1, user: "Patrícia Gomes", rating: 5, comment: "Lugar lindo, estrutura impecável.", date: "2023-11-10" },
+        { id: 2, user: "Marcos Vinícius", rating: 4, comment: "Muito bom, só o acesso que é um pouco longe.", date: "2023-10-25" }
+      ]
+    },
+    6: {
+      id: 6,
+      name: "Doce Encanto Confeitaria",
+      description: "Bolos artísticos e doces finos que encantam pelo sabor e beleza.",
+      rating: 4.9,
+      reviews: 312,
+      distance: "1.5 km",
+      address: "Av. dos Doces, 789 - Centro",
+      phone: "(11) 99999-6666",
+      email: "encomendas@doceencanto.com",
+      image: "https://images.unsplash.com/photo-1535141192574-5d4897c12636?auto=format&fit=crop&q=80&w=800&h=400",
+      gallery: [
+        "https://images.unsplash.com/photo-1563729768647-d81b3b2e5c0b?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=400&h=300",
+        "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&q=80&w=400&h=300"
+      ],
+      services: [
+        { name: "Bolo de Casamento (kg)", price: "R$ 120,00", duration: "Kg" },
+        { name: "Cento de Doces Finos", price: "R$ 250,00", duration: "Cento" },
+        { name: "Bem-Casados", price: "R$ 5,50", duration: "Unidade" },
+        { name: "Mesa de Chocolates", price: "R$ 1.800,00", duration: "Mesa" }
+      ],
+      openTime: "09:00 - 18:00",
+      workingDays: ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+      owner: "Sofia Confeiteira",
+      experience: "18 anos",
+      certifications: ["Pâtisserie Francesa", "Chocolatier"],
+      about: "A Doce Encanto traz o melhor da confeitaria artística para o seu evento. Ingredientes nobres e acabamento perfeito para adoçar os momentos mais importantes da sua vida.",
+      reviews_list: [
+        { id: 1, user: "Larissa Dias", rating: 5, comment: "O bolo estava divino e lindo demais!", date: "2024-02-10" },
+        { id: 2, user: "Felipe Nogueira", rating: 5, comment: "Os doces finos fizeram sucesso.", date: "2024-02-05" }
+      ]
+    }
   };
 
   useEffect(() => {
@@ -147,6 +322,22 @@ const ServiceDetails = () => {
     setSelectedTime('');
     setClientName('');
     setClientEmail('');
+  };
+
+  const handleBudgetSubmit = (e) => {
+    e.preventDefault();
+    // Aqui você integraria com o Firebase para salvar o pedido na coleção 'orcamentos'
+    // Para demonstração, apenas exibimos um alerta
+    alert('Solicitação de orçamento enviada com sucesso! O prestador entrará em contato em breve.');
+    setShowBudgetModal(false);
+    setBudgetForm({
+      clientName: '',
+      clientEmail: '',
+      clientPhone: '',
+      eventDate: '',
+      guests: '',
+      message: ''
+    });
   };
 
   if (loading) {
@@ -216,6 +407,12 @@ const ServiceDetails = () => {
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-all duration-200 hover:-translate-y-0.5 shadow-lg hover:shadow-xl min-w-[140px]"
               >
                 <Calendar className="w-5 h-5" /> Agendar
+              </button>
+              <button 
+                onClick={() => setShowBudgetModal(true)} 
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all duration-200 hover:-translate-y-0.5 shadow-lg hover:shadow-xl min-w-[140px]"
+              >
+                <FileText className="w-5 h-5" /> Orçamento
               </button>
               <button 
                 onClick={() => setShowContactModal(true)} 
@@ -455,6 +652,103 @@ const ServiceDetails = () => {
         </div>
       )}
 
+      {/* Budget Request Modal */}
+      {showBudgetModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+          >
+            <div className="flex justify-between items-center p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900">Solicitar Orçamento</h2>
+              <button 
+                onClick={() => setShowBudgetModal(false)} 
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleBudgetSubmit} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Seu Nome</label>
+                <input
+                  type="text"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  value={budgetForm.clientName}
+                  onChange={(e) => setBudgetForm({...budgetForm, clientName: e.target.value})}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+                  <input
+                    type="email"
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    value={budgetForm.clientEmail}
+                    onChange={(e) => setBudgetForm({...budgetForm, clientEmail: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Telefone</label>
+                  <input
+                    type="tel"
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    value={budgetForm.clientPhone}
+                    onChange={(e) => setBudgetForm({...budgetForm, clientPhone: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Data do Evento</label>
+                  <input
+                    type="date"
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    value={budgetForm.eventDate}
+                    onChange={(e) => setBudgetForm({...budgetForm, eventDate: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Nº Convidados</label>
+                  <input
+                    type="number"
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    value={budgetForm.guests}
+                    onChange={(e) => setBudgetForm({...budgetForm, guests: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Detalhes do Pedido</label>
+                <textarea
+                  required
+                  rows="4"
+                  placeholder="Descreva o que você precisa (ex: tipo de evento, preferências, horário...)"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  value={budgetForm.message}
+                  onChange={(e) => setBudgetForm({...budgetForm, message: e.target.value})}
+                ></textarea>
+              </div>
+              <div className="pt-2">
+                <button 
+                  type="submit"
+                  className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+                >
+                  Enviar Solicitação
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
       <ContactModal
         isOpen={showContactModal}
         onClose={() => setShowContactModal(false)}
@@ -471,4 +765,3 @@ const ServiceDetails = () => {
 };
 
 export default ServiceDetails;
-

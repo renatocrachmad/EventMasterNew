@@ -144,7 +144,7 @@ const Footer = () => {
               <Phone className="w-5 h-5 text-blue-400 mr-3" />
               <div>
                 <p className="text-sm text-gray-400">Telefone</p>
-                <p className="text-white">(11) 9999-9999</p>
+                <p className="text-white">(24) 9999-9999</p>
               </div>
             </div>
 
@@ -160,7 +160,7 @@ const Footer = () => {
               <MapPin className="w-5 h-5 text-blue-400 mr-3" />
               <div>
                 <p className="text-sm text-gray-400">Endereço</p>
-                <p className="text-white">São Paulo, SP - Brasil</p>
+                <p className="text-white">Petropolis, RJ - Brasil</p>
               </div>
             </div>
           </div>

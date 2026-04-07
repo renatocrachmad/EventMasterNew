@@ -26,26 +26,26 @@ const GerenciarPromocoes = () => {
   const [promocoes, setPromocoes] = useState([
     {
       id: 1,
-      titulo: 'Desconto 20% em Serviços Elétricos',
-      descricao: 'Aproveite nossa promoção especial para instalações elétricas residenciais',
-      desconto: 20,
+      titulo: '15% OFF em Buffet de Casamento',
+      descricao: 'Feche seu buffet de casamento para mais de 100 convidados e ganhe 15% de desconto.',
+      desconto: 15,
       tipo: 'percentual',
-      validoAte: '2024-02-15',
-      categoria: 'Serviços Elétricos',
+      validoAte: '2024-08-31',
+      categoria: 'Buffet',
       ativo: true,
-      visualizacoes: 245,
-      cliques: 18,
-      conversoes: 3,
+      visualizacoes: 350,
+      cliques: 25,
+      conversoes: 4,
       imagem: null
     },
     {
       id: 2,
-      titulo: 'Pacote Completo de Encanamento',
-      descricao: 'Instalação completa de encanamento com 15% de desconto',
-      desconto: 15,
-      tipo: 'percentual',
-      validoAte: '2024-02-28',
-      categoria: 'Encanamento',
+      titulo: 'Mesa de Doces Grátis',
+      descricao: 'Na contratação do pacote de decoração completo, a mesa de doces é por nossa conta.',
+      desconto: 100,
+      tipo: 'valor', // Representa um item grátis, mas pode ser modelado como valor
+      validoAte: '2024-07-30',
+      categoria: 'Decoração',
       ativo: true,
       visualizacoes: 189,
       cliques: 12,
@@ -54,12 +54,12 @@ const GerenciarPromocoes = () => {
     },
     {
       id: 3,
-      titulo: 'Manutenção Preventiva - R$ 50 OFF',
-      descricao: 'Serviço de manutenção preventiva com desconto especial',
-      desconto: 50,
-      tipo: 'valor',
-      validoAte: '2024-01-30',
-      categoria: 'Manutenção',
+      titulo: 'Fotografia e Filmagem com 10% OFF',
+      descricao: 'Pacote completo de fotografia e filmagem para seu evento com desconto especial.',
+      desconto: 10,
+      tipo: 'percentual',
+      validoAte: '2024-06-20',
+      categoria: 'Fotografia',
       ativo: false,
       visualizacoes: 156,
       cliques: 8,
@@ -69,13 +69,11 @@ const GerenciarPromocoes = () => {
   ]);
 
   const categorias = [
-    'Serviços Elétricos',
-    'Encanamento',
-    'Manutenção',
-    'Pintura',
-    'Marcenaria',
-    'Jardinagem',
-    'Limpeza',
+    'Buffet',
+    'Decoração',
+    'Fotografia',
+    'Música',
+    'Pacotes Completos',
     'Outros'
   ];
 
@@ -550,4 +548,3 @@ const PromoModal = ({ promo, onSave, onClose, categorias }) => {
 };
 
 export default GerenciarPromocoes;
-

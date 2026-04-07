@@ -4,15 +4,14 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   DollarSign,
-  Calendar,
   Briefcase,
   TrendingUp,
   BarChart3,
   Clock,
   Filter,
   Download,
+  Calendar,
 } from "lucide-react";
-import "./style.css";
 
 const EarningsControl = () => {
   const navigate = useNavigate();
@@ -31,99 +30,99 @@ const EarningsControl = () => {
       const mockBookings = [
         {
           id: 1,
-          serviceName: "Troca de Óleo",
-          price: 80,
-          date: "2024-01-10",
-          status: "concluido",
-        },
-        {
-          id: 2,
-          serviceName: "Revisão Completa",
-          price: 250,
+          serviceName: "Buffet Casamento",
+          price: 15000,
           date: "2024-01-15",
           status: "concluido",
         },
         {
+          id: 2,
+          serviceName: "Coquetel Corporativo",
+          price: 5000,
+          date: "2024-01-20",
+          status: "concluido",
+        },
+        {
           id: 3,
-          serviceName: "Balanceamento",
-          price: 50,
-          date: "2024-02-20",
+          serviceName: "Aniversário 15 Anos",
+          price: 12000,
+          date: "2024-02-10",
           status: "concluido",
         },
         {
           id: 4,
-          serviceName: "Troca de Pneu",
-          price: 120,
-          date: "2024-02-01",
+          serviceName: "Jantar de Noivado",
+          price: 3500,
+          date: "2024-02-25",
           status: "concluido",
         },
         {
           id: 5,
-          serviceName: "Alinhamento",
-          price: 70,
+          serviceName: "Buffet Casamento",
+          price: 16000,
           date: "2024-03-05",
           status: "concluido",
         },
         {
           id: 6,
-          serviceName: "Troca de Óleo",
-          price: 80,
-          date: "2024-03-10",
+          serviceName: "Coffee Break",
+          price: 1500,
+          date: "2024-03-15",
           status: "concluido",
         },
         {
           id: 7,
-          serviceName: "Revisão Completa",
-          price: 250,
-          date: "2024-04-01",
+          serviceName: "Aniversário Infantil",
+          price: 4000,
+          date: "2024-04-02",
           status: "concluido",
         },
         {
           id: 8,
-          serviceName: "Freios",
-          price: 150,
-          date: "2024-04-05",
+          serviceName: "Buffet Casamento",
+          price: 14500,
+          date: "2024-04-20",
           status: "concluido",
         },
         {
           id: 9,
-          serviceName: "Troca de Óleo",
-          price: 80,
-          date: "2024-05-12",
+          serviceName: "Coquetel Corporativo",
+          price: 6000,
+          date: "2024-05-10",
           status: "concluido",
         },
         {
           id: 10,
-          serviceName: "Suspensão",
-          price: 300,
-          date: "2024-05-18",
+          serviceName: "Bodas de Prata",
+          price: 8000,
+          date: "2024-05-25",
           status: "concluido",
         },
         {
           id: 11,
-          serviceName: "Balanceamento",
-          price: 50,
-          date: "2024-06-03",
+          serviceName: "Buffet Casamento",
+          price: 15500,
+          date: "2024-06-08",
           status: "concluido",
         },
         {
           id: 12,
-          serviceName: "Alinhamento",
-          price: 70,
-          date: "2024-06-15",
+          serviceName: "Jantar de Formatura",
+          price: 9000,
+          date: "2024-06-22",
           status: "concluido",
         },
         {
           id: 13,
-          serviceName: "Troca de Óleo",
-          price: 80,
-          date: "2024-07-08",
+          serviceName: "Festa Junina Empresa",
+          price: 7500,
+          date: "2024-07-05",
           status: "concluido",
         },
         {
           id: 14,
-          serviceName: "Revisão Completa",
-          price: 250,
+          serviceName: "Buffet Casamento",
+          price: 17000,
           date: "2024-07-20",
           status: "concluido",
         },
@@ -208,114 +207,117 @@ const EarningsControl = () => {
   };
 
   return (
-    <div className="earnings-control-page">
-      <div className="header">
-        <div className="container">
-          <button onClick={() => navigate(-1)} className="back-button">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/90 hover:text-white transition-colors mb-6">
             <ArrowLeft className="w-5 h-5" />
             Voltar
           </button>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="header-content"
+            className="text-center"
           >
-            <h1>Controle de Ganhos e Serviços</h1>
-            <p>
+            <h1 className="text-4xl font-bold tracking-tight">Controle de Ganhos e Serviços</h1>
+            <p className="mt-2 text-lg text-white/80 max-w-2xl mx-auto">
               Acompanhe suas finanças e o desempenho dos seus serviços de forma
               detalhada.
             </p>
           </motion.div>
         </div>
-      </div>
+      </header>
 
-      <div className="container content-section">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Filtros e Resumo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="controls-section"
+          className="mb-12"
         >
-          <div className="filters">
-            <div className="filter-group">
-              <label htmlFor="year-select">
-                <Filter className="w-4 h-4" />
-                Ano:
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 p-4 bg-white rounded-xl shadow-sm border">
+            <div className="flex items-center gap-3">
+              <label htmlFor="year-select" className="flex items-center text-sm font-medium text-gray-700">
+                <Filter className="w-5 h-5 mr-2 text-gray-500" />
+                Filtrar por Ano:
               </label>
               <select
                 id="year-select"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="year-select"
+                className="rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               >
                 <option value={2024}>2024</option>
                 <option value={2023}>2023</option>
                 <option value={2022}>2022</option>
               </select>
             </div>
-            <button onClick={handleExportData} className="export-button">
+            <button onClick={handleExportData} className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
               <Download className="w-4 h-4" />
               Exportar Dados
             </button>
           </div>
 
-          <div className="summary-cards">
-            <div className="summary-card total-earnings">
-              <div className="summary-icon">
-                <TrendingUp className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl shadow-sm border p-6 flex items-center gap-6">
+              <div className="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center bg-green-100 text-green-600">
+                <TrendingUp className="w-8 h-8" />
               </div>
-              <div className="summary-content">
-                <h3>Total do Ano</h3>
-                <p>{formatCurrency(totalEarnings)}</p>
+              <div>
+                <h3 className="text-sm font-medium text-gray-500">Total de Ganhos no Ano</h3>
+                <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalEarnings)}</p>
               </div>
             </div>
-            <div className="summary-card total-services">
-              <div className="summary-icon">
-                <BarChart3 className="w-6 h-6" />
+            <div className="bg-white rounded-xl shadow-sm border p-6 flex items-center gap-6">
+              <div className="flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center bg-blue-100 text-blue-600">
+                <BarChart3 className="w-8 h-8" />
               </div>
-              <div className="summary-content">
-                <h3>Serviços Realizados</h3>
-                <p>{totalServices} serviços</p>
+              <div>
+                <h3 className="text-sm font-medium text-gray-500">Serviços Realizados no Ano</h3>
+                <p className="text-3xl font-bold text-gray-900">{totalServices} serviços</p>
               </div>
             </div>
           </div>
         </motion.div>
 
         {loading ? (
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p>Carregando dados...</p>
+          <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+            <p className="text-lg">Carregando dados...</p>
           </div>
         ) : (
-          <div className="grid-container">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Ganhos Mensais */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="card monthly-earnings"
+              className="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden hover:-translate-y-1 transition-transform"
             >
-              <div className="card-header">
-                <div className="card-icon monthly">
-                  <DollarSign className="w-6 h-6" />
+              <div className="p-6 text-center border-b border-gray-100">
+                <div className="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center text-white bg-gradient-to-br from-green-400 to-green-600">
+                  <DollarSign className="w-8 h-8" />
                 </div>
-                <h2>Ganhos Mensais</h2>
-                <p>Acompanhe sua receita mensal de forma detalhada</p>
+                <h2 className="text-xl font-bold text-gray-800">Ganhos Mensais</h2>
+                <p className="text-sm text-gray-500 mt-1">Sua receita mês a mês</p>
               </div>
-              <div className="data-list">
+              <div className="p-6 flex-1">
                 {Object.keys(monthlyEarnings).length === 0 ? (
-                  <div className="empty-state">
+                  <div className="flex items-center justify-center h-full text-center text-gray-500 italic">
                     <p>Nenhum ganho registrado para {selectedYear}</p>
                   </div>
                 ) : (
-                  Object.entries(monthlyEarnings).map(([month, total]) => (
-                    <div key={month} className="data-item">
-                      <span className="data-label">{month}</span>
-                      <span className="data-value earnings">
-                        {formatCurrency(total)}
-                      </span>
-                    </div>
-                  ))
+                  <ul className="space-y-2">
+                    {Object.entries(monthlyEarnings).map(([month, total]) => (
+                      <li key={month} className="flex justify-between items-center py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span className="font-medium text-gray-700">{month}</span>
+                        <span className="font-semibold text-green-600">
+                          {formatCurrency(total)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </motion.div>
@@ -325,29 +327,31 @@ const EarningsControl = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="card service-earnings"
+              className="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden hover:-translate-y-1 transition-transform"
             >
-              <div className="card-header">
-                <div className="card-icon service">
-                  <Briefcase className="w-6 h-6" />
+              <div className="p-6 text-center border-b border-gray-100">
+                <div className="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center text-white bg-gradient-to-br from-blue-400 to-blue-600">
+                  <Briefcase className="w-8 h-8" />
                 </div>
-                <h2>Ganhos por Serviço</h2>
-                <p>Veja quanto você ganhou com cada serviço prestado</p>
+                <h2 className="text-xl font-bold text-gray-800">Ganhos por Serviço</h2>
+                <p className="text-sm text-gray-500 mt-1">Performance de cada serviço</p>
               </div>
-              <div className="data-list">
+              <div className="p-6 flex-1">
                 {serviceEarnings.length === 0 ? (
-                  <div className="empty-state">
+                  <div className="flex items-center justify-center h-full text-center text-gray-500 italic">
                     <p>Nenhum serviço registrado para {selectedYear}</p>
                   </div>
                 ) : (
-                  serviceEarnings.map((service, index) => (
-                    <div key={index} className="data-item">
-                      <span className="data-label">{service.name}</span>
-                      <span className="data-value earnings">
-                        {formatCurrency(service.total)}
-                      </span>
-                    </div>
-                  ))
+                  <ul className="space-y-2">
+                    {serviceEarnings.map((service, index) => (
+                      <li key={index} className="flex justify-between items-center py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span className="font-medium text-gray-700">{service.name}</span>
+                        <span className="font-semibold text-green-600">
+                          {formatCurrency(service.total)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </motion.div>
@@ -357,35 +361,37 @@ const EarningsControl = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="card monthly-services"
+              className="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden hover:-translate-y-1 transition-transform"
             >
-              <div className="card-header">
-                <div className="card-icon services">
-                  <Clock className="w-6 h-6" />
+              <div className="p-6 text-center border-b border-gray-100">
+                <div className="mx-auto mb-4 w-16 h-16 rounded-full flex items-center justify-center text-white bg-gradient-to-br from-purple-400 to-purple-600">
+                  <Clock className="w-8 h-8" />
                 </div>
-                <h2>Serviços por Mês</h2>
-                <p>Monitore quantos serviços você realizou por mês</p>
+                <h2 className="text-xl font-bold text-gray-800">Serviços por Mês</h2>
+                <p className="text-sm text-gray-500 mt-1">Volume de trabalho mensal</p>
               </div>
-              <div className="data-list">
+              <div className="p-6 flex-1">
                 {Object.keys(monthlyServices).length === 0 ? (
-                  <div className="empty-state">
+                  <div className="flex items-center justify-center h-full text-center text-gray-500 italic">
                     <p>Nenhum serviço registrado para {selectedYear}</p>
                   </div>
                 ) : (
-                  Object.entries(monthlyServices).map(([month, count]) => (
-                    <div key={month} className="data-item">
-                      <span className="data-label">{month}</span>
-                      <span className="data-value services">
-                        {count} serviços
-                      </span>
-                    </div>
-                  ))
+                  <ul className="space-y-2">
+                    {Object.entries(monthlyServices).map(([month, count]) => (
+                      <li key={month} className="flex justify-between items-center py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors">
+                        <span className="font-medium text-gray-700">{month}</span>
+                        <span className="font-semibold text-blue-600">
+                          {count} {count > 1 ? 'serviços' : 'serviço'}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </motion.div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

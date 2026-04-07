@@ -54,7 +54,7 @@ const TorneParceiro = ({ onClickParceiro }) => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-xl text-white/90 max-w-2xl mx-auto"
           >
-            Junte-se à maior rede de serviços automotivos do Brasil e transforme seu negócio
+            Junte-se à nós  e transforme seu negócio
           </motion.p>
         </div>
 

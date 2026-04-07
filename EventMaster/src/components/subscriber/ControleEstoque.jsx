@@ -25,51 +25,51 @@ const ControleEstoque = () => {
   const [estoque, setEstoque] = useState([
     {
       id: 1,
-      nome: 'Chave de Fenda Phillips',
-      categoria: 'Ferramentas',
-      quantidade: 25,
+      nome: 'Toalha de Mesa Branca (Retangular)',
+      categoria: 'Têxteis',
+      quantidade: 50,
       minimo: 10,
-      preco: 15.90,
-      fornecedor: 'Ferramentas Brasil',
+      preco: 12.00,
+      fornecedor: 'Casa & Pano',
       ultimaMovimentacao: '2024-01-15',
       status: 'normal'
     },
     {
       id: 2,
-      nome: 'Parafuso M6 x 20mm',
-      categoria: 'Parafusos',
-      quantidade: 5,
-      minimo: 20,
-      preco: 0.50,
-      fornecedor: 'Parafusos & Cia',
+      nome: 'Prato de Jantar Porcelana',
+      categoria: 'Louças',
+      quantidade: 180,
+      minimo: 200,
+      preco: 5.50,
+      fornecedor: 'Louças Finas SA',
       ultimaMovimentacao: '2024-01-10',
       status: 'baixo'
     },
     {
       id: 3,
-      nome: 'Furadeira Elétrica 500W',
-      categoria: 'Equipamentos',
-      quantidade: 3,
+      nome: 'Taça de Vinho Cristal',
+      categoria: 'Copos',
+      quantidade: 250,
       minimo: 2,
-      preco: 189.90,
-      fornecedor: 'Equipamentos Pro',
+      preco: 8.00,
+      fornecedor: 'Cristais & Cia',
       ultimaMovimentacao: '2024-01-12',
       status: 'normal'
     },
     {
       id: 4,
-      nome: 'Tinta Acrílica Branca 3.6L',
-      categoria: 'Tintas',
+      nome: 'Arranjo de Flores (Mesa)',
+      categoria: 'Decoração',
       quantidade: 0,
       minimo: 5,
-      preco: 45.90,
-      fornecedor: 'Tintas Premium',
+      preco: 75.00,
+      fornecedor: 'Floricultura Bela Flor',
       ultimaMovimentacao: '2024-01-08',
       status: 'esgotado'
     }
   ]);
 
-  const categorias = ['todos', 'Ferramentas', 'Parafusos', 'Equipamentos', 'Tintas'];
+  const categorias = ['todos', 'Têxteis', 'Louças', 'Copos', 'Decoração', 'Mobiliário'];
 
   const filteredEstoque = estoque.filter(item => {
     const matchesSearch = item.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -348,7 +348,7 @@ const ControleEstoque = () => {
 const ItemModal = ({ item, onSave, onClose }) => {
   const [formData, setFormData] = useState({
     nome: item?.nome || '',
-    categoria: item?.categoria || 'Ferramentas',
+    categoria: item?.categoria || 'Têxteis',
     quantidade: item?.quantidade || 0,
     minimo: item?.minimo || 0,
     preco: item?.preco || 0,
@@ -390,10 +390,11 @@ const ItemModal = ({ item, onSave, onClose }) => {
               onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="Ferramentas">Ferramentas</option>
-              <option value="Parafusos">Parafusos</option>
-              <option value="Equipamentos">Equipamentos</option>
-              <option value="Tintas">Tintas</option>
+              <option value="Têxteis">Têxteis</option>
+              <option value="Louças">Louças</option>
+              <option value="Copos">Copos</option>
+              <option value="Decoração">Decoração</option>
+              <option value="Mobiliário">Mobiliário</option>
             </select>
           </div>
 
@@ -469,4 +470,3 @@ const ItemModal = ({ item, onSave, onClose }) => {
 };
 
 export default ControleEstoque;
-

@@ -27,44 +27,44 @@ const FluxoCaixa = () => {
     {
       id: 1,
       tipo: 'entrada',
-      descricao: 'Serviço de Encanamento - Cliente João',
-      categoria: 'Serviços',
-      valor: 350.00,
+      descricao: 'Sinal - Casamento Ana & Pedro',
+      categoria: 'Eventos',
+      valor: 5000.00,
       data: '2024-01-15',
       status: 'confirmado'
     },
     {
       id: 2,
       tipo: 'saida',
-      descricao: 'Compra de Ferramentas',
-      categoria: 'Equipamentos',
-      valor: 120.50,
+      descricao: 'Compra de Bebidas - Adega Central',
+      categoria: 'Insumos',
+      valor: 1200.00,
       data: '2024-01-14',
       status: 'confirmado'
     },
     {
       id: 3,
       tipo: 'entrada',
-      descricao: 'Reparo Elétrico - Cliente Maria',
-      categoria: 'Serviços',
-      valor: 280.00,
+      descricao: 'Pagamento Final - Festa 15 Anos',
+      categoria: 'Eventos',
+      valor: 8000.00,
       data: '2024-01-13',
       status: 'pendente'
     },
     {
       id: 4,
       tipo: 'saida',
-      descricao: 'Combustível',
-      categoria: 'Transporte',
-      valor: 85.00,
+      descricao: 'Pagamento Equipe de Garçons',
+      categoria: 'Pessoal',
+      valor: 600.00,
       data: '2024-01-12',
       status: 'confirmado'
     },
     {
       id: 5,
       tipo: 'entrada',
-      descricao: 'Instalação de Torneira',
-      categoria: 'Serviços',
+      descricao: 'Degustação - Noivos Lucas e Carla',
+      categoria: 'Degustações',
       valor: 150.00,
       data: '2024-01-11',
       status: 'confirmado'
@@ -87,8 +87,8 @@ const FluxoCaixa = () => {
     .reduce((sum, t) => sum + t.valor, 0);
 
   const categorias = {
-    entrada: ['Serviços', 'Vendas', 'Outros'],
-    saida: ['Equipamentos', 'Transporte', 'Materiais', 'Outros']
+    entrada: ['Eventos', 'Sinais', 'Degustações', 'Outros'],
+    saida: ['Insumos', 'Pessoal', 'Aluguel', 'Transporte', 'Marketing', 'Outros']
   };
 
   const handleAddTransaction = (newTransaction) => {
@@ -233,9 +233,11 @@ const FluxoCaixa = () => {
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
             <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
               <option>Todas as Categorias</option>
-              <option>Serviços</option>
-              <option>Equipamentos</option>
+              <option>Eventos</option>
+              <option>Insumos</option>
+              <option>Pessoal</option>
               <option>Transporte</option>
+              <option>Outros</option>
             </select>
             
             <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
@@ -352,7 +354,7 @@ const TransactionModal = ({ transaction, onSave, onClose, categorias }) => {
   const [formData, setFormData] = useState({
     tipo: transaction?.tipo || 'entrada',
     descricao: transaction?.descricao || '',
-    categoria: transaction?.categoria || 'Serviços',
+    categoria: transaction?.categoria || 'Eventos',
     valor: transaction?.valor || 0,
     status: transaction?.status || 'confirmado'
   });
@@ -462,4 +464,3 @@ const TransactionModal = ({ transaction, onSave, onClose, categorias }) => {
 };
 
 export default FluxoCaixa;
-
