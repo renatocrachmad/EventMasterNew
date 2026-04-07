@@ -13,6 +13,10 @@ import "./App.css";
 import PartnerPage from "./pages/PartnerPage";
 import EarningsControl from "./pages/ControleDeGanhos";
 import PremiumProviderDashboard from "./pages/InserirAnunciosPremium";
+import HelpCenter from "./pages/HelpCenter"; // Importe a nova página
+import Contact from "./pages/Contact"; // Importe a nova página
+import TermsOfUse from "./pages/TermsOfUse"; // Importe a nova página
+import PrivacyPolicy from "./pages/PrivacyPolicy"; 
 
 function App() {
   const user = {
@@ -36,6 +40,10 @@ function App() {
           <Route path="/subscriber-dashboard" element={<SubscriberDashboard />} />
           <Route path="/controle-ganhos" element={<EarningsControl />} />
           <Route path="/premium-dashboard" element={<PremiumProviderDashboard />} />
+          <Route path="/help-center" element={<HelpCenter />} /> {/* Nova rota */}
+          <Route path="/contact" element={<Contact />} /> {/* Nova rota */}
+          <Route path="/terms-of-use" element={<TermsOfUse />} /> {/* Nova rota */}
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
       </Layout>
     </Router>

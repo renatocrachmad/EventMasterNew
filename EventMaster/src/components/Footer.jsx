@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
   Phone,
   Mail,
@@ -40,11 +41,11 @@ const Footer = () => {
     {
       title: "Suporte",
       links: [
-        "Central de Ajuda",
-        "Contato",
-        "Política de Privacidade",
-        "Termos de Uso",
-        "FAQ"
+        { name: "Central de Ajuda", path: "/help-center" },
+        { name: "Contato", path: "/contact" },
+        { name: "Política de Privacidade", path: "/privacy-policy" },
+        { name: "Termos de Uso", path: "/terms-of-use" },
+        { name: "FAQ", path: "/help-center" }
       ]
     }
   ];
@@ -118,13 +119,13 @@ const Footer = () => {
               </h4>
               <ul className="space-y-2">
                 {section.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
+                  <li key={typeof link === 'string' ? link : link.name}>
+                    <Link
+                      to={typeof link === 'string' ? "#" : link.path}
                       className="text-gray-300 hover:text-white transition-colors duration-200 text-sm"
                     >
-                      {link}
-                    </a>
+                      {typeof link === 'string' ? link : link.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
