@@ -31,6 +31,7 @@ import FluxoCaixa from '../../components/subscriber/FluxoCaixa';
 import BudgetRequestsPage from '../../components/subscriber/BudgetRequestsPage'; // Importar a nova página
 import GerenciarPromocoes from '../../components/subscriber/GerenciarPromocoes';
 import PlanoAssinatura from '../../components/subscriber/PlanoAssinatura';
+import ClientSupplierManagement from './ClientSupplierManagement'; // Import the new component
 
 const DashboardHome = ({ stats }) => {
   const statCards = [
@@ -371,6 +372,7 @@ const SubscriberDashboard = () => {
     { id: 'promocoes', label: 'Minhas Promoções', icon: Star },
     { id: 'assinatura', label: 'Plano & Assinatura', icon: CreditCard },
     { id: 'orcamentos', label: 'Pedidos de Orçamento', icon: Mail }, // Novo item de menu
+    { id: 'clientes-fornecedores', label: 'Clientes & Fornecedores', icon: User }, // New menu item
     { id: 'configuracoes', label: 'Configurações', icon: Settings }
   ];
 
@@ -404,6 +406,8 @@ const SubscriberDashboard = () => {
         return <ProviderProfile />;
       case 'orcamentos': // Novo caso para a página de orçamentos
         return <BudgetRequestsPage />;
+      case 'clientes-fornecedores': // New case for client/supplier management
+        return <ClientSupplierManagement />;
       default:
         return <DashboardHome stats={dashboardStats} />;
     }

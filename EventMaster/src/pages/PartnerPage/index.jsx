@@ -12,17 +12,26 @@ import {
   Target,
   Crown,
   Shield,
+  Zap
 } from "lucide-react";
 
 const PartnerPage = () => {
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isAnnual, setIsAnnual] = useState(false);
+
+  const pricing = {
+    basico: { mensal: 29.90, anual: 29.90 * 12 * 0.95 },
+    premium: { mensal: 49.90, anual: 49.90 * 12 * 0.95 }
+  };
 
   const handlePlanSelection = (planType) => {
-    // setSelectedPlan(planType); // O estado não está sendo usado, pode ser removido se não houver lógica futura
-    // Aqui você pode implementar a lógica de redirecionamento para pagamento
+    const period = isAnnual ? "Anual" : "Mensal";
+    const total = isAnnual 
+      ? (planType === "Básico" ? pricing.basico.anual : pricing.premium.anual).toFixed(2)
+      : (planType === "Básico" ? pricing.basico.mensal : pricing.premium.mensal).toFixed(2);
+
     alert(
-      `Você selecionou o Plano ${planType}! Redirecionando para o pagamento...`
+      `Você selecionou o Plano ${planType} ${period}! Valor: R$ ${total}\nRedirecionando para o pagamento...`
     );
   };
 
@@ -57,6 +66,20 @@ const PartnerPage = () => {
     },
   ];
 
+  const premiumExtraFeatures = [
+    "Gestão de agenda ilimitada",
+    "Fluxo de caixa detalhado",
+    "Promoções ilimitadas",
+    "Relatórios avançados",
+    "Suporte prioritário",
+    "Cadastro de Clientes e Fornecedores",
+    "Controle de Estoque"
+  ];
+
+  const formatPrice = (price) => {
+    return price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
 
@@ -82,8 +105,33 @@ const PartnerPage = () => {
         </div>
       </header>
 
+      {/* Periodicidade Selector */}
+      <div className="flex justify-center mt-12">
+        <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-200 flex items-center">
+          <button
+            onClick={() => setIsAnnual(false)}
+            className={`px-6 py-2 rounded-lg font-medium transition-all ${
+              !isAnnual ? "bg-indigo-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            Mensal
+          </button>
+          <button
+            onClick={() => setIsAnnual(true)}
+            className={`px-6 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
+              isAnnual ? "bg-indigo-600 text-white shadow-md" : "text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            Anual
+            <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">
+              5% OFF
+            </span>
+          </button>
+        </div>
+      </div>
+
       {/* Plans Section */}
-      <main className="py-16 sm:py-24">
+      <main className="py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
             {/* Plano Básico */}
@@ -102,9 +150,14 @@ const PartnerPage = () => {
                   Ideal para começar a organizar seu negócio
                 </p>
                 <p className="mt-6">
-                  <span className="text-5xl font-bold tracking-tight text-gray-900">R$49</span>
-                  <span className="text-lg font-medium text-gray-500">,90/mês</span>
+                  <span className="text-5xl font-bold tracking-tight text-gray-900">
+                    R$ {isAnnual ? formatPrice(pricing.basico.anual / 12) : "29,90"}
+                  </span>
+                  <span className="text-lg font-medium text-gray-500">/mês</span>
                 </p>
+                {isAnnual && (
+                  <p className="text-sm text-green-600 font-medium mt-2">R$ {formatPrice(pricing.basico.anual)} cobrado anualmente</p>
+                )}
               </div>
 
               <div className="flex-grow">
@@ -126,9 +179,9 @@ const PartnerPage = () => {
 
               <button
                 onClick={() => handlePlanSelection("Básico")}
-                className="w-full mt-10 py-3 px-6 rounded-lg font-semibold text-lg text-indigo-600 bg-indigo-100 hover:bg-indigo-200 transition-all"
+                className="w-full mt-10 py-4 px-6 rounded-xl font-bold text-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all border-2 border-transparent hover:border-indigo-200"
               >
-                Escolher Plano Básico
+                {isAnnual ? "Assinar Plano Anual" : "Assinar Plano Mensal"}
               </button>
             </motion.div>
 
@@ -153,9 +206,14 @@ const PartnerPage = () => {
                   Para quem quer maximizar sua visibilidade
                 </p>
                 <p className="mt-6">
-                  <span className="text-5xl font-bold tracking-tight text-gray-900">R$99</span>
-                  <span className="text-lg font-medium text-gray-500">,90/mês</span>
+                  <span className="text-5xl font-bold tracking-tight text-gray-900">
+                    R$ {isAnnual ? formatPrice(pricing.premium.anual / 12) : "49,90"}
+                  </span>
+                  <span className="text-lg font-medium text-gray-500">/mês</span>
                 </p>
+                {isAnnual && (
+                  <p className="text-sm text-indigo-100 font-medium mt-2">R$ {formatPrice(pricing.premium.anual)} cobrado anualmente</p>
+                )}
               </div>
 
               <div className="flex-grow">
@@ -171,14 +229,13 @@ const PartnerPage = () => {
 
                 <h3 className="text-sm font-bold uppercase text-gray-500 mb-6">Recursos Exclusivos:</h3>
                 <ul className="space-y-5">
-                  {premiumFeatures.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center">
-                        {feature.icon}
+                  {premiumExtraFeatures.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-4">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                        <Zap className="w-3.5 h-3.5" />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-800">{feature.title}</h4>
-                        <p className="text-sm text-gray-500">{feature.description}</p>
+                        <h4 className="font-semibold text-gray-800 text-sm">{feature}</h4>
                       </div>
                     </li>
                   ))}
@@ -187,9 +244,9 @@ const PartnerPage = () => {
 
               <button
                 onClick={() => handlePlanSelection("Premium")}
-                className="w-full mt-10 py-3 px-6 rounded-lg font-semibold text-lg text-white bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+                className="w-full mt-10 py-4 px-6 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                Escolher Plano Premium
+                {isAnnual ? "Assinar Premium Anual" : "Assinar Premium Mensal"}
               </button>
             </motion.div>
           </div>
