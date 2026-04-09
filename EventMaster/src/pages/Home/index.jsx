@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ControlledCarousel from "../../components/Carrossel";
 import ServiceCard from "../../components/ServiceCard";
@@ -6,6 +6,7 @@ import ServiceSearch from "../../components/ServiceSearch";
 import { PromocoesSection } from "../../components/promocoes";
 import TorneParceiro from "../../components/TorneParceiro";
 import Footer from "../../components/Footer";
+import { Sun, Moon, Plus, Minus, Type } from "lucide-react";
 import "../../App.css";
 
 // Dados mockados (poderiam vir de uma API no futuro)
@@ -101,6 +102,22 @@ const Home = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [serviceType, setServiceType] = useState("all");
+  const [darkMode, setDarkMode] = useState(false);
+  const [fontSize, setFontSize] = useState(100);
+
+  // Efeito para aplicar o tema escuro no documento
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
+
+  // Função para ajustar o tamanho da fonte entre 80% e 150%
+  const adjustFontSize = (delta) => {
+    setFontSize((prev) => Math.min(Math.max(prev + delta, 80), 150));
+  };
 
   const filteredServices = services.filter((service) => {
     const matchesSearch = service.title
@@ -115,32 +132,69 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div 
+      className="min-h-screen bg-background text-foreground transition-colors duration-300" 
+      style={{ fontSize: `${fontSize}%` }}
+    >
       {/* Header com botões de navegação */}
-      <div className="absolute top-4 right-4 z-50 flex gap-2">
+      <div className="absolute top-4 right-4 z-50 flex flex-wrap justify-end gap-1 items-center">
+        {/* Grupo unificado de Acessibilidade e Navegação */}
+        <div className="flex items-center gap-1 bg-black/80 backdrop-blur-md p-1 rounded-lg border border-white/10 shadow-sm">
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2 hover:bg-white/20 rounded-md transition-colors text-white"
+            title={darkMode ? "Ativar Modo Claro" : "Ativar Modo Escuro"}
+          >
+            {darkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5" />}
+          </button>
+          
+          <div className="w-px h-4 bg-white/20 mx-1" />
+          
+          <button
+            onClick={() => adjustFontSize(10)}
+            className="p-2 hover:bg-white/20 rounded-md transition-colors text-white"
+            title="Aumentar Fonte"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          
+          <Type className="w-4 h-4 text-white/60" />
+          
+          <button
+            onClick={() => adjustFontSize(-10)}
+            className="p-2 hover:bg-white/20 rounded-md transition-colors text-white"
+            title="Diminuir Fonte"
+          >
+            <Minus className="w-4 h-4" />
+          </button>
+        </div>
+
         <button
           onClick={() => navigate("/client-profile")}
           className="px-4 py-2 bg-green-600/80 backdrop-blur-sm text-white border border-green-500/30 rounded-lg hover:bg-green-700/90 transition-all duration-200"
         >
           Perfil Cliente
         </button>
+
         <button
           onClick={() => navigate("/provider-profile")}
           className="px-4 py-2 bg-purple-600/80 backdrop-blur-sm text-white border border-purple-500/30 rounded-lg hover:bg-purple-700/90 transition-all duration-200"
         >
           Perfil Prestador
         </button>
-        <button
-          onClick={() => navigate("/login")}
-          className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-lg hover:bg-white/30 transition-all duration-200"
-        >
-          Entrar
-        </button>
+
         <button
           onClick={() => navigate("/cadastro")}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
         >
           Cadastrar
+        </button>
+
+        <button
+          onClick={() => navigate("/login")}
+          className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-lg hover:bg-white/30 transition-all duration-200"
+        >
+          Entrar
         </button>
       </div>
 
@@ -149,7 +203,7 @@ const Home = () => {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">EventMaster</h1>
-          <p className="text-xl md:text-2xl text-blue-100 mb-8">Transforme seu evento em uma experiência inesquecível. Encontre os melhores profissionais para sua festa.</p>
+          <div className="text-xl md:text-2xl text-blue-100 mb-8">Transforme seu evento em uma experiência inesquecível. Encontre os melhores profissionais para sua festa.</div>
         </div>
       </div>
 

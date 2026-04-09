@@ -15,66 +15,39 @@ import {
   Zap
 } from "lucide-react";
 
+// Import ALL_PLANOS from PlanoAssinatura.jsx to ensure consistency
+import { ALL_PLANOS } from '../../components/subscriber/PlanoAssinatura';
+
 const PartnerPage = () => {
   const navigate = useNavigate();
   const [isAnnual, setIsAnnual] = useState(false);
 
+  // Use ALL_PLANOS for pricing information
   const pricing = {
-    basico: { mensal: 29.90, anual: 29.90 * 12 * 0.95 },
-    premium: { mensal: 49.90, anual: 49.90 * 12 * 0.95 }
+    basico: { mensal: ALL_PLANOS.basicoMensal.preco, anual: ALL_PLANOS.basicoAnual.precoAnual },
+    premium: { mensal: ALL_PLANOS.premiumMensal.preco, anual: ALL_PLANOS.premiumAnual.precoAnual }
   };
 
-  const handlePlanSelection = (planType) => {
-    const period = isAnnual ? "Anual" : "Mensal";
-    const total = isAnnual 
-      ? (planType === "Básico" ? pricing.basico.anual : pricing.premium.anual).toFixed(2)
-      : (planType === "Básico" ? pricing.basico.mensal : pricing.premium.mensal).toFixed(2);
+  const handlePlanSelection = (planKey) => { // Changed to use planKey directly from ALL_PLANOS
+    const selectedPlan = ALL_PLANOS[planKey];
+    if (!selectedPlan) {
+      alert("Plano inválido selecionado.");
+      return;
+    }
+
+    const period = selectedPlan.precoAnual ? "Anual" : "Mensal";
+    const total = selectedPlan.precoAnual ? selectedPlan.precoAnual : selectedPlan.preco;
 
     alert(
-      `Você selecionou o Plano ${planType} ${period}! Valor: R$ ${total}\nRedirecionando para o pagamento...`
+      `Você selecionou o ${selectedPlan.nome} ${period}! Valor: R$ ${total.toFixed(2)}\nRedirecionando para o pagamento...`
     );
+    // In a real application, you would navigate to a checkout page with the selected plan details
+    // navigate(`/checkout?plan=${planKey}`);
   };
 
-  const basicFeatures = [
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Controle de Ganhos Mensais",
-      description: "Acompanhe sua receita mensal de forma detalhada",
-    },
-    {
-      icon: <BarChart3 className="w-6 h-6" />,
-      title: "Ganhos por Serviço",
-      description: "Veja quanto você ganhou com cada serviço prestado",
-    },
-    {
-      icon: <Calendar className="w-6 h-6" />,
-      title: "Controle de Serviços",
-      description: "Monitore quantos serviços você realizou por mês",
-    },
-  ];
-
-  const premiumFeatures = [
-    {
-      icon: <Megaphone className="w-6 h-6" />,
-      title: "Anúncio no Carrossel",
-      description: "Seu negócio em destaque na página inicial",
-    },
-    {
-      icon: <Target className="w-6 h-6" />,
-      title: "Promoções em Destaque",
-      description: "Divulgue suas promoções na página Home",
-    },
-  ];
-
-  const premiumExtraFeatures = [
-    "Gestão de agenda ilimitada",
-    "Fluxo de caixa detalhado",
-    "Promoções ilimitadas",
-    "Relatórios avançados",
-    "Suporte prioritário",
-    "Cadastro de Clientes e Fornecedores",
-    "Controle de Estoque"
-  ];
+  // Feature lists now directly reference ALL_PLANOS
+  const basicFeatures = ALL_PLANOS.basicoMensal.recursos; // Using basic monthly resources
+  const premiumExtraFeatures = ALL_PLANOS.premiumMensal.recursos; // Using premium monthly resources
 
   const formatPrice = (price) => {
     return price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -145,40 +118,35 @@ const PartnerPage = () => {
                 <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600">
                   <Shield className="w-10 h-10" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Plano Básico</h2>
+                <h2 className="text-3xl font-bold text-gray-900">{isAnnual ? ALL_PLANOS.basicoAnual.nome : ALL_PLANOS.basicoMensal.nome}</h2>
                 <p className="mt-2 text-gray-500">
                   Ideal para começar a organizar seu negócio
                 </p>
                 <p className="mt-6">
                   <span className="text-5xl font-bold tracking-tight text-gray-900">
-                    R$ {isAnnual ? formatPrice(pricing.basico.anual / 12) : "29,90"}
+                    R$ {isAnnual ? formatPrice(pricing.basico.anual / 12) : formatPrice(pricing.basico.mensal)}
                   </span>
                   <span className="text-lg font-medium text-gray-500">/mês</span>
                 </p>
                 {isAnnual && (
-                  <p className="text-sm text-green-600 font-medium mt-2">R$ {formatPrice(pricing.basico.anual)} cobrado anualmente</p>
+                  <p className="text-sm text-green-600 font-medium mt-2">Pague R$ {formatPrice(pricing.basico.anual)} e economize 5%</p>
                 )}
               </div>
 
               <div className="flex-grow">
-                <h3 className="text-sm font-bold uppercase text-gray-500 mb-6">O que está incluído:</h3>
+                <h3 className="text-sm font-bold uppercase text-gray-500 mb-6">O que está incluído:</h3> {/* Updated to use ALL_PLANOS */}
                 <ul className="space-y-5">
-                  {basicFeatures.map((feature, index) => (
-                    <li key={index} className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center">
-                        {feature.icon}
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-800">{feature.title}</h4>
-                        <p className="text-sm text-gray-500">{feature.description}</p>
-                      </div>
+                  {(isAnnual ? ALL_PLANOS.basicoAnual.recursos : ALL_PLANOS.basicoMensal.recursos).map((feature, index) => (
+                    <li key={index} className="flex items-center gap-3">
+                      <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-700 font-medium">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
               <button
-                onClick={() => handlePlanSelection("Básico")}
+                onClick={() => handlePlanSelection(isAnnual ? 'basicoAnual' : 'basicoMensal')}
                 className="w-full mt-10 py-4 px-6 rounded-xl font-bold text-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all border-2 border-transparent hover:border-indigo-200"
               >
                 {isAnnual ? "Assinar Plano Anual" : "Assinar Plano Mensal"}
@@ -201,35 +169,34 @@ const PartnerPage = () => {
                 <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-gradient-to-br from-indigo-100 to-purple-100 text-indigo-600">
                   <Crown className="w-10 h-10" />
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Plano Premium</h2>
+                <h2 className="text-3xl font-bold text-gray-900">{isAnnual ? ALL_PLANOS.premiumAnual.nome : ALL_PLANOS.premiumMensal.nome}</h2>
                 <p className="mt-2 text-gray-500">
                   Para quem quer maximizar sua visibilidade
                 </p>
                 <p className="mt-6">
                   <span className="text-5xl font-bold tracking-tight text-gray-900">
-                    R$ {isAnnual ? formatPrice(pricing.premium.anual / 12) : "49,90"}
+                    R$ {isAnnual ? formatPrice(pricing.premium.anual / 12) : formatPrice(pricing.premium.mensal)}
                   </span>
                   <span className="text-lg font-medium text-gray-500">/mês</span>
                 </p>
                 {isAnnual && (
-                  <p className="text-sm text-indigo-100 font-medium mt-2">R$ {formatPrice(pricing.premium.anual)} cobrado anualmente</p>
+                  <p className="text-sm text-indigo-100 font-medium mt-2">Pague R$ {formatPrice(pricing.premium.anual)} e economize 5%</p>
                 )}
               </div>
 
               <div className="flex-grow">
                 <h3 className="text-sm font-bold uppercase text-gray-500 mb-4">Tudo do Básico, mais:</h3>
-                <ul className="space-y-3 mb-8">
+                <ul className="space-y-3 mb-8"> {/* Display basic features for premium plan */}
                   {basicFeatures.map((feature, index) => (
                     <li key={index} className="flex items-center gap-3 text-gray-600">
                       <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
-                      <span className="text-sm font-medium">{feature.title}</span>
+                      <span className="text-sm font-medium">{feature}</span>
                     </li>
                   ))}
                 </ul>
-
-                <h3 className="text-sm font-bold uppercase text-gray-500 mb-6">Recursos Exclusivos:</h3>
+                <h3 className="text-sm font-bold uppercase text-gray-500 mb-6">Recursos Exclusivos:</h3> {/* Display premium extra features */}
                 <ul className="space-y-5">
-                  {premiumExtraFeatures.map((feature, index) => (
+                  {(isAnnual ? ALL_PLANOS.premiumAnual.recursos : ALL_PLANOS.premiumMensal.recursos).map((feature, index) => (
                     <li key={index} className="flex items-center gap-4">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center">
                         <Zap className="w-3.5 h-3.5" />
@@ -243,7 +210,7 @@ const PartnerPage = () => {
               </div>
 
               <button
-                onClick={() => handlePlanSelection("Premium")}
+                onClick={() => handlePlanSelection(isAnnual ? 'premiumAnual' : 'premiumMensal')}
                 className="w-full mt-10 py-4 px-6 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-indigo-600 to-purple-700 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
               >
                 {isAnnual ? "Assinar Premium Anual" : "Assinar Premium Mensal"}

@@ -31,15 +31,22 @@ const premiumAnualRecursos = [
   'controle de Estoque'
 ];
 
-const premiumMensalRecursos = [
+const premiumMensalRecursos = [ // Recursos específicos para o plano Premium Mensal
   'Acesso completo ao dashboard',
+  'Gestão de agenda ilimitada',
+  'Fluxo de caixa detalhado',
+  'Promoções ilimitadas',
+  'Relatórios avançados',
+  'Suporte prioritário',
+  'Cadastro de Clientes e Fornecedores',
+  'Controle de Estoque',
   'Backup automático',
   'Integração com APIs externas'
 ];
 
-const ALL_PLANOS = {
-  mensal: {
-    nome: 'Plano Basico Mensal',
+export const ALL_PLANOS = {
+  basicoMensal: { // Alterado para 'basicoMensal' para consistência
+    nome: 'Plano Básico Mensal',
     preco: 29.90, // Ajustado para R$29,90
     periodo: 'mês',
     desconto: 0,
@@ -83,13 +90,11 @@ const ALL_PLANOS = {
     periodo: 'mês',
     desconto: 0,
     popular: false,
-    recursos: premiumAnualRecursos.filter(r => r !== 'Desconto anual') // Agora premiumAnualRecursos está definido
+    recursos: premiumMensalRecursos // Usando os recursos dedicados para Premium Mensal
   }
 };
 
 const PlanoAssinatura = () => {
-  const [selectedPlan, setSelectedPlan] = useState('mensal');
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const navigate = useNavigate(); // Import useNavigate
   const [currentSubscription, setCurrentSubscription] = useState({
     id: 'premiumAnual', // Exemplo: Assinatura Premium Anual
@@ -98,29 +103,6 @@ const PlanoAssinatura = () => {
     valorMensal: 49.90, // Valor mensal equivalente pago
     inicioAssinatura: '2024-01-15'
   });
-  // Planos disponíveis
-  const planos = ALL_PLANOS; // Usar a constante definida fora do componente
-
-  const handleSubscribe = (planType) => {
-    // Redireciona para a página de planos externa conforme solicitado
-    navigate('/seja-parceiro');
-  };
-
-  const handlePayment = (paymentMethod) => {
-    // Aqui seria integrado com a plataforma de pagamento externa
-    console.log(`Processando pagamento via ${paymentMethod} para plano ${selectedPlan}`);
-    
-    // Simular redirecionamento para plataforma de pagamento
-    const paymentUrls = {
-      stripe: 'https://checkout.stripe.com/pay/cs_test_...',
-      paypal: 'https://www.paypal.com/checkoutnow?token=...',
-      mercadopago: 'https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=...'
-    };
-
-    // Em um cenário real, redirecionaria para a URL de pagamento
-    alert(`Redirecionando para ${paymentMethod}...\nURL: ${paymentUrls[paymentMethod] || 'URL de pagamento'}`);
-    setShowPaymentModal(false);
-  };
 
   const handleCancelSubscription = () => {
     if (confirm('Tem certeza que deseja cancelar sua assinatura?')) {
@@ -149,9 +131,7 @@ const PlanoAssinatura = () => {
     }
   };
 
-  const calculateSavings = (precoMensalRef, precoAnualTotal) => {
-    return (precoMensalRef * 12) - precoAnualTotal;
-  };
+  const planos = ALL_PLANOS; // Usar a constante definida fora do componente
 
   return (
     <div className="space-y-6">
@@ -215,153 +195,6 @@ const PlanoAssinatura = () => {
             </button>
           </div>
         )}
-      </motion.div>
-
-      {/* Comparação de planos */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
-      > {/* Este é o bloco "Comparação de planos" */}
-        <div className="text-center mb-8">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">Escolha seu Plano</h3>
-          <p className="text-gray-600">Selecione o plano que melhor atende às suas necessidades</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Plano Mensal */}
-          <div className="relative border border-gray-200 rounded-lg p-6 flex flex-col">
-            <div className="text-center mb-6">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{planos.mensal.nome}</h4>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                R$ {planos.mensal.preco.toFixed(2)}
-                <span className="text-lg font-normal text-gray-600">/mês</span>
-              </div>
-              <p className="text-sm text-gray-600">Cobrança mensal</p>
-            </div>
-
-            <ul className="space-y-3 mb-6 flex-grow">
-              {planos.mensal.recursos.map((recurso, index) => (
-                <li key={index} className="flex items-center">
-                  <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">{recurso}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => handleSubscribe('basicoMensal')} // Alterado para basicoMensal
-              className="w-full py-3 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              Escolher Plano Mensal
-            </button>
-          </div>
-
-          {/* Plano Premium Anual */}
-          <div className="relative border-2 border-blue-500 rounded-lg p-6">
-            {planos.premiumAnual.popular && (
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Mais Popular
-                </span>
-              </div>
-            )}
-
-            <div className="text-center mb-6">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{planos.premiumAnual.nome}</h4>
-              <div className="text-3xl font-bold text-gray-900 mb-1"> {/* Exibe o preço por mês equivalente */}
-                R$ {planos.premiumAnual.precoPorMes.toFixed(2)}
-                <span className="text-lg font-normal text-gray-600">/mês</span>
-              </div>
-              <p className="text-sm text-gray-600">
-                R$ {planos.premiumAnual.precoAnual.toFixed(2)} cobrado anualmente
-              </p>
-              <div className="mt-2 inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                <Star className="w-4 h-4 mr-1" /> 
-                Economize R$ {calculateSavings(planos.premiumAnual.precoPorMes, planos.premiumAnual.precoAnual).toFixed(2)} por ano
-              </div>
-            </div>
-
-            <ul className="space-y-3 mb-6">
-              {planos.premiumAnual.recursos.map((recurso, index) => (
-                <li key={index} className="flex items-center">
-                  <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">{recurso}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => handleSubscribe('premiumAnual')} // Alterado para premiumAnual
-              className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Escolher Plano Anual
-            </button>
-          </div>
-
-          {/* Plano Básico Anual */}
-          <div className="relative border border-gray-200 rounded-lg p-6 flex flex-col">
-            <div className="text-center mb-6">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{planos.basicoAnual.nome}</h4>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                R$ {planos.basicoAnual.precoPorMes.toFixed(2)}
-                <span className="text-lg font-normal text-gray-600">/mês</span>
-              </div>
-              <p className="text-sm text-gray-600">
-                R$ {planos.basicoAnual.precoAnual.toFixed(2)} cobrado anualmente
-              </p>
-              <div className="mt-2 inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                <Star className="w-4 h-4 mr-1" /> 
-                Economize R$ {calculateSavings(planos.basicoAnual.precoPorMes, planos.basicoAnual.precoAnual).toFixed(2)} por ano
-              </div>
-            </div>
-
-            <ul className="space-y-3 mb-6 flex-grow">
-              {planos.basicoAnual.recursos.map((recurso, index) => (
-                <li key={index} className="flex items-center">
-                  <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">{recurso}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => handleSubscribe('basicoAnual')}
-              className="w-full py-3 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              Escolher Plano Anual
-            </button>
-          </div>
-
-          {/* Plano Premium Mensal */}
-          <div className="relative border border-gray-200 rounded-lg p-6 flex flex-col">
-            <div className="text-center mb-6">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">{planos.premiumMensal.nome}</h4>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                R$ {planos.premiumMensal.preco.toFixed(2)}
-                <span className="text-lg font-normal text-gray-600">/mês</span>
-              </div>
-              <p className="text-sm text-gray-600">Cobrança mensal</p>
-            </div>
-
-            <ul className="space-y-3 mb-6 flex-grow">
-              {planos.premiumMensal.recursos.map((recurso, index) => (
-                <li key={index} className="flex items-center">
-                  <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                  <span className="text-sm text-gray-700">{recurso}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => handleSubscribe('premiumMensal')}
-              className="w-full py-3 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-            >
-              Escolher Plano Mensal
-            </button>
-          </div>
-        </div>
       </motion.div>
 
       {/* Benefícios da assinatura */}
@@ -439,17 +272,6 @@ const PlanoAssinatura = () => {
           </div>
         </div>
       </motion.div>
-
-      {/* Modal de pagamento */}
-      {/* Mantido como estava, pois não foi solicitado alteração */}
-      {showPaymentModal && (
-        <PaymentModal
-          plan={planos[selectedPlan]}
-          planType={selectedPlan}
-          onPayment={handlePayment}
-          onClose={() => setShowPaymentModal(false)}
-        />
-      )}
     </div>
   );
 };

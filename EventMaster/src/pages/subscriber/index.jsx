@@ -226,22 +226,6 @@ const DashboardHome = ({ stats }) => {
   );
 };
 
-const ConfiguracoesPage = () => (
-  <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-200">
-    <div className="mb-6">
-      <h3 className="text-xl font-bold text-gray-900">Configurações</h3>
-      <p className="text-gray-600 mt-1">Gerencie as configurações da sua conta e negócio</p>
-    </div>
-    <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
-      <div className="text-center">
-        <Settings className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-        <p className="text-gray-500 font-medium">Página de configurações será implementada aqui</p>
-        <p className="text-sm text-gray-400 mt-1">Configurações de perfil, notificações e preferências</p>
-      </div>
-    </div>
-  </div>
-);
-
 const ProviderProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
@@ -400,9 +384,8 @@ const SubscriberDashboard = () => {
         return <GerenciarPromocoes />;
       case 'assinatura':
         return <PlanoAssinatura />;
-      case 'configuracoes':
-        return <ConfiguracoesPage />;
       case 'perfil':
+      case 'configuracoes':
         return <ProviderProfile />;
       case 'orcamentos': // Novo caso para a página de orçamentos
         return <BudgetRequestsPage />;
