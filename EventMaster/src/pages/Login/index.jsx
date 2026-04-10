@@ -21,6 +21,29 @@ const Login = () => {
   const [lembrarSenha, setLembrarSenha] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Função para solicitar localização e navegar
+  const requestLocationAndNavigate = () => {
+    if (window.confirm("Deseja permitir que o EventMaster acesse sua localização para encontrar prestadores próximos?")) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            localStorage.setItem("userCoords", JSON.stringify(coords));
+            navigate("/home");
+          },
+          (error) => {
+            console.error("Erro ao obter localização:", error);
+            navigate("/home");
+          }
+        );
+      } else {
+        navigate("/home");
+      }
+    } else {
+      navigate("/home");
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -39,7 +62,7 @@ const Login = () => {
       }
 
       alert(`✅ Bem-vindo, ${user.email}`);
-      navigate("/home");
+      requestLocationAndNavigate();
     } catch (error) {
       let message = "❌ Erro no login.";
       if (error.code === "auth/user-not-found") message = "Usuário não encontrado.";
@@ -59,7 +82,7 @@ const Login = () => {
 
       localStorage.setItem("usuarioLogado", user.email);
       alert(`✅ Login com ${providerName}!`);
-      navigate("/home");
+      requestLocationAndNavigate();
     } catch (error) {
       console.error("Erro no login social:", error);
       alert("Erro no login com " + providerName);

@@ -170,7 +170,7 @@
 
 .service-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .contact-button {
@@ -178,14 +178,31 @@
   background: #3b82f6;
   color: white;
   border: none;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.4rem;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.budget-button {
+  flex: 1;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.6rem 0.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -195,15 +212,24 @@
   transform: translateY(-1px);
 }
 
+.budget-button:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
 .details-button {
   flex: 1;
   background: transparent;
   color: #3b82f6;
   border: 2px solid #3b82f6;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.4rem;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -351,4 +377,3 @@
     background-size: 200% 100%;
   }
 }
-

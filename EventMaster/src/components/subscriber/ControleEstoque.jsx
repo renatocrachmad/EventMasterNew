@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import jsPDF from 'jspdf';
 import { 
   Plus, 
   Search, 
@@ -16,6 +17,7 @@ import {
 } from 'lucide-react';
 
 const ControleEstoque = () => {
+  const fileInputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('todos');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -122,6 +124,96 @@ const ControleEstoque = () => {
     setEstoque(estoque.filter(item => item.id !== id));
   };
 
+  const handleExportCSV = () => {
+    const headers = ['Nome', 'Categoria', 'Quantidade', 'Mínimo', 'Preço', 'Fornecedor', 'Status'];
+    const rows = filteredEstoque.map(item => [
+      `"${item.nome}"`,
+      item.categoria,
+      item.quantidade,
+      item.minimo,
+      item.preco.toFixed(2),
+      `"${item.fornecedor}"`,
+      item.status
+    ]);
+    
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `estoque_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportCSV = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        const newItems = [];
+        const startIndex = lines[0].toLowerCase().includes('nome') ? 1 : 0;
+
+        for (let i = startIndex; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          const [nome, categoria, quantidade, minimo, preco, fornecedor] = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+          
+          if (nome && quantidade) {
+            const qty = parseInt(quantidade);
+            const min = parseInt(minimo || 0);
+            newItems.push({
+              id: Date.now() + i,
+              nome,
+              categoria: categoria || 'Outros',
+              quantidade: qty,
+              minimo: min,
+              preco: parseFloat(preco) || 0,
+              fornecedor: fornecedor || 'Não informado',
+              ultimaMovimentacao: new Date().toISOString().split('T')[0],
+              status: qty === 0 ? 'esgotado' : qty <= min ? 'baixo' : 'normal'
+            });
+          }
+        }
+        setEstoque(prev => [...newItems, ...prev]);
+        alert(`${newItems.length} itens importados com sucesso!`);
+      } catch (err) {
+        alert('Erro ao importar CSV. Verifique se o formato está correto.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    doc.setFillColor(79, 70, 229);
+    doc.rect(0, 0, pageWidth, 40, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.text('EventMaster', pageWidth / 2, 18, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text('Relatório de Controle de Estoque', pageWidth / 2, 28, { align: 'center' });
+
+    let y = 50;
+    doc.setTextColor(31, 41, 55);
+    filteredEstoque.forEach(item => {
+      if (y > 270) { doc.addPage(); y = 20; }
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${item.nome} (${item.categoria})`, 15, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Qtd: ${item.quantidade} | Mín: ${item.minimo} | Preço: R$ ${item.preco.toFixed(2)} | Status: ${getStatusText(item.status)}`, 15, y + 6);
+      y += 15;
+    });
+    doc.save(`estoque_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header com estatísticas */}
@@ -226,11 +318,31 @@ const ControleEstoque = () => {
           </div>
 
           <div className="flex space-x-2">
-            <button className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleImportCSV} 
+              accept=".csv" 
+              className="hidden" 
+            />
+            <button 
+              onClick={handleExportPDF}
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
               <Download className="w-4 h-4 mr-2" />
-              Exportar
+              PDF
             </button>
-            <button className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button 
+              onClick={handleExportCSV}
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              CSV
+            </button>
+            <button 
+              onClick={() => fileInputRef.current.click()}
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
               <Upload className="w-4 h-4 mr-2" />
               Importar
             </button>

@@ -73,13 +73,13 @@ const PrivacyPolicy = () => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden"
           >
-            <div className="p-8 md:p-12">
+            <div className="p-6 md:p-12">
               <div className="flex items-center gap-2 text-sm text-gray-400 mb-10 pb-4 border-b border-gray-50">
                 <Clock className="w-4 h-4" />
                 <span>Última atualização: {lastUpdate}</span>
               </div>
 
-              <div className="space-y-12">
+              <div className="space-y-8 md:space-y-12">
                 {sections.map((section, index) => (
                   <motion.section 
                     key={index}
@@ -97,7 +97,7 @@ const PrivacyPolicy = () => {
                         {section.title}
                       </h2>
                     </div>
-                    <p className="text-gray-600 leading-relaxed pl-14">
+                    <p className="text-sm md:text-base text-gray-600 leading-relaxed pl-0 md:pl-14">
                       {section.content}
                     </p>
                   </motion.section>

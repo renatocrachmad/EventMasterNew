@@ -1,4 +1,15 @@
 import React, { useState } from 'react';
+import { 
+  BarChart, 
+  // ... (outros imports de recharts)
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell 
+} from 'recharts';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -33,7 +44,29 @@ import GerenciarPromocoes from '../../components/subscriber/GerenciarPromocoes';
 import PlanoAssinatura from '../../components/subscriber/PlanoAssinatura';
 import ClientSupplierManagement from './ClientSupplierManagement'; // Import the new component
 
-const DashboardHome = ({ stats }) => {
+// DashboardHome component (recebe profile e onNavigate)
+const DashboardHome = ({ stats, profile, onNavigate }) => {
+  const [period, setPeriod] = useState(7);
+
+  const chartData7Days = [
+    { name: 'Seg', eventos: 4 },
+    { name: 'Ter', eventos: 7 },
+    { name: 'Qua', eventos: 5 },
+    { name: 'Qui', eventos: 9 },
+    { name: 'Sex', eventos: 12 },
+    { name: 'Sáb', eventos: 18 },
+    { name: 'Dom', eventos: 15 },
+  ];
+
+  const chartData30Days = [
+    { name: 'Semana 1', eventos: 38 },
+    { name: 'Semana 2', eventos: 45 },
+    { name: 'Semana 3', eventos: 32 },
+    { name: 'Semana 4', eventos: 58 },
+  ];
+
+  const chartData = period === 7 ? chartData7Days : chartData30Days;
+
   const statCards = [
     {
       title: 'Faturamento Mensal',
@@ -123,20 +156,55 @@ const DashboardHome = ({ stats }) => {
       >
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">Eventos Realizados (Últimos 7 Dias)</h3>
+            <h3 className="text-xl font-bold text-gray-900">
+              Eventos Realizados ({period === 7 ? 'Últimos 7 Dias' : 'Últimos 30 Dias'})
+            </h3>
             <p className="text-gray-600 mt-1">Acompanhe o desempenho dos seus serviços</p>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-xl">
-            <Calendar className="w-4 h-4 text-indigo-600" />
-            <span className="text-sm font-medium text-indigo-600">Últimos 7 dias</span>
+          <div className="relative group">
+            <Calendar className="w-4 h-4 text-indigo-600 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+            <select 
+              value={period}
+              onChange={(e) => setPeriod(Number(e.target.value))}
+              className="appearance-none pl-10 pr-10 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-medium border-none focus:ring-2 focus:ring-indigo-500 cursor-pointer hover:bg-indigo-100 transition-colors"
+            >
+              <option value={7}>Últimos 7 dias</option>
+              <option value={30}>Últimos 30 dias</option>
+            </select>
           </div>
         </div>
-        <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
-          <div className="text-center">
-            <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-500 font-medium">Gráfico de eventos será implementado aqui</p>
-            <p className="text-sm text-gray-400 mt-1">Integração com biblioteca de gráficos</p>
-          </div>
+        <div className="h-72 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+                dy={10}
+              />
+              <YAxis 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+              />
+              <Tooltip 
+                cursor={{ fill: '#f8fafc' }}
+                contentStyle={{ 
+                  borderRadius: '12px', 
+                  border: 'none', 
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  padding: '12px'
+                }}
+              />
+              <Bar dataKey="eventos" radius={[6, 6, 0, 0]} barSize={32}>
+                {chartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={index === chartData.length - 1 ? '#4f46e5' : '#818cf8'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </motion.div>
 
@@ -152,7 +220,10 @@ const DashboardHome = ({ stats }) => {
           <p className="text-gray-600 mt-1">Acesse rapidamente as funcionalidades mais utilizadas</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <button className="group flex items-center p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg border border-blue-200">
+          <button 
+            onClick={() => onNavigate('estoque')}
+            className="group flex items-center p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg border border-blue-200"
+          >
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
               <Package className="w-6 h-6 text-white" />
             </div>
@@ -162,7 +233,10 @@ const DashboardHome = ({ stats }) => {
             </div>
           </button>
 
-          <button className="group flex items-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg border border-green-200">
+          <button 
+            onClick={() => onNavigate('promocoes')}
+            className="group flex items-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg border border-green-200"
+          >
             <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
               <Star className="w-6 h-6 text-white" />
             </div>
@@ -172,7 +246,10 @@ const DashboardHome = ({ stats }) => {
             </div>
           </button>
 
-          <button className="group flex items-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg border border-purple-200">
+          <button 
+            onClick={() => onNavigate('fluxo')}
+            className="group flex items-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg border border-purple-200"
+          >
             <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
               <BarChart3 className="w-6 h-6 text-white" />
             </div>
@@ -200,24 +277,24 @@ const DashboardHome = ({ stats }) => {
             <Clock className="w-5 h-5 text-indigo-500 mt-1 flex-shrink-0" />
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Horário de funcionamento</h4>
-              <p className="text-gray-600">08:00 - 18:00</p>
-              <p className="text-sm text-gray-500">Segunda a Sábado</p>
+              <p className="text-gray-600">{profile.openingHours || '08:00 - 18:00'}</p>
+              <p className="text-sm text-gray-500">{profile.businessDays || 'Segunda a Sábado'}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
             <MapPin className="w-5 h-5 text-indigo-500 mt-1 flex-shrink-0" />
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Endereço</h4>
-              <p className="text-gray-600">Av. das Festas, 100</p>
-              <p className="text-sm text-gray-500">Centro - São Paulo</p>
+              <p className="text-gray-600">{profile.address}</p>
+              <p className="text-sm text-gray-500">Localização atualizada</p>
             </div>
           </div>
           <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
             <Phone className="w-5 h-5 text-indigo-500 mt-1 flex-shrink-0" />
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Contato</h4>
-              <p className="text-gray-600">(11) 99999-1111</p>
-              <p className="text-sm text-gray-500">contato@saborefesta.com.br</p>
+              <p className="text-gray-600">{profile.phone}</p>
+              <p className="text-sm text-gray-500">{profile.email}</p>
             </div>
           </div>
         </div>
@@ -226,19 +303,8 @@ const DashboardHome = ({ stats }) => {
   );
 };
 
-const ProviderProfile = () => {
+const ProviderProfile = ({ profile, setProfile }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
-    name: 'Ana Pereira',
-    businessName: 'Sabor & Festa Buffet',
-    email: 'contato@saborefesta.com.br',
-    phone: '(11) 99999-1111',
-    address: 'Av. das Festas, 100 - Centro - São Paulo',
-    description: 'Buffet completo para casamentos e eventos corporativos com cardápio personalizado. Oferecemos uma experiência gastronômica única para o seu evento.',
-    category: 'Buffet',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150',
-    coverImage: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=800&h=400'
-  });
 
   const handleSave = () => {
     setIsEditing(false);
@@ -307,6 +373,18 @@ const ProviderProfile = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">Telefone / WhatsApp</label>
               <input type="text" value={profile.phone} disabled={!isEditing} onChange={(e) => setProfile({...profile, phone: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500" />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Horário de Funcionamento</label>
+              <input type="text" value={profile.openingHours} disabled={!isEditing} onChange={(e) => setProfile({...profile, openingHours: e.target.value})} placeholder="Ex: 08:00 - 18:00" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Dias de Funcionamento</label>
+              <input type="text" value={profile.businessDays} disabled={!isEditing} onChange={(e) => setProfile({...profile, businessDays: e.target.value})} placeholder="Ex: Segunda a Sábado" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">E-mail de Contato</label>
+              <input type="email" value={profile.email} disabled={!isEditing} onChange={(e) => setProfile({...profile, email: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500" />
+            </div>
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Endereço Completo</label>
               <input type="text" value={profile.address} disabled={!isEditing} onChange={(e) => setProfile({...profile, address: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500" />
@@ -329,18 +407,25 @@ const SubscriberDashboard = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
 
-  const userData = {
-    name: 'Ana Pereira', // Mock data, replace with actual user data
-    business: 'Sabor & Festa Buffet', // Mock data
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150' // Mock data
-  };
+  const [profile, setProfile] = useState({
+    name: 'Ana Pereira',
+    businessName: 'Sabor & Festa Buffet',
+    email: 'contato@saborefesta.com.br',
+    phone: '(11) 99999-1111',
+    address: 'Av. das Festas, 100 - Centro - São Paulo',
+    description: 'Buffet completo para casamentos e eventos corporativos com cardápio personalizado. Oferecemos uma experiência gastronômica única para o seu evento.',
+    category: 'Buffet',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150',
+    coverImage: 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=800&h=400',
+    openingHours: '08:00 - 18:00',
+    businessDays: 'Segunda a Sábado'
+  });
 
-
-  const notifications = [
+  const [notifications, setNotifications] = useState([
     { id: 1, text: 'Novo pedido de orçamento recebido', time: '5 min atrás', unread: true, target: 'orcamentos' },
     { id: 2, text: 'Sua promoção "Festa 15 anos" foi aprovada', time: '1 hora atrás', unread: false, target: 'promocoes' },
     { id: 3, text: 'Lembrete: Atualizar estoque de bebidas', time: '2 horas atrás', unread: false, target: 'estoque' },
-  ];
+  ]);
 
   const dashboardStats = {
     vendas: { valor: 'R$ 12.450', variacao: '+12%' },
@@ -367,7 +452,13 @@ const SubscriberDashboard = () => {
     }
   };
 
-  const handleNotificationClick = (target) => {
+  const handleMarkAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+    setShowNotifications(false);
+  };
+
+  const handleNotificationClick = (id, target) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n));
     if (target) {
       setActiveTab(target);
       setShowNotifications(false);
@@ -386,13 +477,13 @@ const SubscriberDashboard = () => {
         return <PlanoAssinatura />;
       case 'perfil':
       case 'configuracoes':
-        return <ProviderProfile />;
+        return <ProviderProfile profile={profile} setProfile={setProfile} />;
       case 'orcamentos': // Novo caso para a página de orçamentos
         return <BudgetRequestsPage />;
       case 'clientes-fornecedores': // New case for client/supplier management
         return <ClientSupplierManagement />;
       default:
-        return <DashboardHome stats={dashboardStats} />;
+        return <DashboardHome stats={dashboardStats} profile={profile} onNavigate={setActiveTab} />;
     }
   };
 
@@ -400,7 +491,7 @@ const SubscriberDashboard = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header - Full Width */}
       <div className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:pl-48 lg:pr-8 py-4 md:py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
@@ -410,8 +501,8 @@ const SubscriberDashboard = () => {
                 <Menu className="w-5 h-5" />
               </button>
               <div>
-                <h1 className="text-3xl font-bold">Painel do Prestador</h1>
-                <p className="text-white/90 mt-1">Gerencie seus serviços e acompanhe seu desempenho</p>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Painel do Prestador</h1>
+                <p className="hidden sm:block text-white/90 text-sm mt-1">Gerencie seus serviços e acompanhe seu desempenho</p>
               </div>
             </div>
 
@@ -420,7 +511,7 @@ const SubscriberDashboard = () => {
               <div className="relative">
                 <button 
                   onClick={() => setShowNotifications(!showNotifications)}
-                  className="relative p-3 bg-white/20 border border-white/30 rounded-xl text-white hover:bg-white/30 transition-all duration-200 hover:-translate-y-0.5"
+                  className="relative p-2 sm:p-3 bg-white/20 border border-white/30 rounded-xl text-white hover:bg-white/30 transition-all duration-200"
                 >
                   <Bell className="w-5 h-5" />
                   {notifications.some(n => n.unread) && (
@@ -429,20 +520,25 @@ const SubscriberDashboard = () => {
                 </button>
                 
                 {showNotifications && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 text-gray-800"
+                    className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 text-gray-800"
                   >
                     <div className="px-4 py-2 border-b border-gray-100 flex justify-between items-center">
                       <h3 className="font-semibold text-sm">Notificações</h3>
-                      <button className="text-xs text-indigo-600 font-medium hover:text-indigo-800">Marcar todas como lidas</button>
+                      <button 
+                        onClick={handleMarkAllAsRead}
+                        className="text-xs text-indigo-600 font-medium hover:text-indigo-800"
+                      >
+                        Marcar todas como lidas
+                      </button>
                     </div>
                     <div className="max-h-64 overflow-y-auto">
                       {notifications.map(n => (
                         <div 
                           key={n.id} 
-                          onClick={() => handleNotificationClick(n.target)}
+                          onClick={() => handleNotificationClick(n.id, n.target)}
                           className={`px-4 py-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 cursor-pointer ${n.unread ? 'bg-indigo-50/30' : ''}`}
                         >
                           <p className="text-sm font-medium text-gray-800">{n.text}</p>
@@ -458,16 +554,16 @@ const SubscriberDashboard = () => {
               <div className="relative">
                 <button 
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-3 bg-white/20 border border-white/30 rounded-xl px-2 py-1.5 sm:px-4 sm:py-2 hover:bg-white/30 transition-all duration-200"
+                  className="flex items-center gap-2 sm:gap-3 bg-white/20 border border-white/30 rounded-xl px-1.5 py-1 sm:px-4 sm:py-2 hover:bg-white/30 transition-all duration-200"
                 >
                   <img 
-                    src={userData.avatar} 
-                    alt={userData.name} 
-                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white/50"
+                    src={profile.avatar} 
+                    alt={profile.name} 
+                    className="w-7 h-7 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white/50"
                   />
                   <div className="hidden md:block text-left">
-                    <p className="font-semibold text-white text-sm">{userData.name}</p>
-                    <p className="text-xs text-white/80">{userData.business}</p>
+                    <p className="font-semibold text-white text-sm">{profile.name}</p>
+                    <p className="text-xs text-white/80">{profile.businessName}</p>
                   </div>
                 </button>
 
@@ -478,8 +574,8 @@ const SubscriberDashboard = () => {
                     className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100 text-gray-800"
                   >
                     <div className="px-4 py-2 border-b border-gray-100 md:hidden">
-                      <p className="font-semibold text-sm">{userData.name}</p>
-                      <p className="text-xs text-gray-500">{userData.business}</p>
+                      <p className="font-semibold text-sm">{profile.name}</p>
+                      <p className="text-xs text-gray-500">{profile.businessName}</p>
                     </div>
                     <button 
                       onClick={() => { setActiveTab('perfil'); setShowUserMenu(false); }}
@@ -508,7 +604,7 @@ const SubscriberDashboard = () => {
         </div>
       </div>
 
-      <div className="flex w-full max-w-7xl lg:mx-auto">
+      <div className="flex w-full max-w-7xl mx-auto px-4 sm:px-6 lg:pl-48 lg:pr-8">
         {/* Sidebar */}
         <motion.div
           initial={{ x: -300 }}

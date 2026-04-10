@@ -5,8 +5,8 @@ const TextoAnimado = () => {
   const [currentText, setCurrentText] = useState(0);
   
   const texts = [
-    "Encontre os melhores serviços automotivos",
-    "Mecânica, elétrica, funilaria e muito mais",
+    "Transforme seu evento em uma experiência inesquecível.",
+    "Encontre os melhores profissionais para sua festa.",
     "Profissionais qualificados perto de você",
     "Qualidade e confiança em cada serviço"
   ];

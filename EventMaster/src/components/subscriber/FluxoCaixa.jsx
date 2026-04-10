@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import jsPDF from 'jspdf';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Legend
+} from 'recharts';
 import { 
   Plus, 
   TrendingUp, 
@@ -8,6 +19,7 @@ import {
   Calendar,
   Filter,
   Download,
+  Upload,
   Edit3,
   Trash2,
   ArrowUpCircle,
@@ -17,10 +29,13 @@ import {
 } from 'lucide-react';
 
 const FluxoCaixa = () => {
+  const fileInputRef = useRef(null);
   const [selectedPeriod, setSelectedPeriod] = useState('mes');
   const [showAddModal, setShowAddModal] = useState(false);
   const [transactionType, setTransactionType] = useState('entrada');
   const [editingTransaction, setEditingTransaction] = useState(null);
+  const [filterCategory, setFilterCategory] = useState('Todas');
+  const [filterStatus, setFilterStatus] = useState('Todos');
 
   // Dados mockados de transações
   const [transacoes, setTransacoes] = useState([
@@ -71,6 +86,13 @@ const FluxoCaixa = () => {
     }
   ]);
 
+  // Lógica de filtragem das transações
+  const filteredTransacoes = transacoes.filter(t => {
+    const matchesCategory = filterCategory === 'Todas' || t.categoria === filterCategory;
+    const matchesStatus = filterStatus === 'Todos' || t.status === filterStatus;
+    return matchesCategory && matchesStatus;
+  });
+
   // Cálculos financeiros
   const entradas = transacoes
     .filter(t => t.tipo === 'entrada' && t.status === 'confirmado')
@@ -111,6 +133,153 @@ const FluxoCaixa = () => {
 
   const handleDeleteTransaction = (id) => {
     setTransacoes(transacoes.filter(t => t.id !== id));
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['Tipo', 'Descrição', 'Categoria', 'Valor', 'Data', 'Status'];
+    const rows = filteredTransacoes.map(t => [
+      t.tipo,
+      `"${t.descricao}"`,
+      t.categoria,
+      t.valor.toFixed(2),
+      t.data,
+      t.status
+    ]);
+    
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(["\ufeff" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `fluxo_caixa_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  };
+
+  const handleImportCSV = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        const newTransactions = [];
+        const startIndex = lines[0].toLowerCase().includes('descri') ? 1 : 0;
+
+        for (let i = startIndex; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          const [tipo, descricao, categoria, valor, data, status] = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+          if (descricao && valor) {
+            newTransactions.push({
+              id: Date.now() + i,
+              tipo: tipo?.toLowerCase().includes('saida') ? 'saida' : 'entrada',
+              descricao,
+              categoria: categoria || 'Outros',
+              valor: parseFloat(valor.replace(',', '.')),
+              data: data || new Date().toISOString().split('T')[0],
+              status: status?.toLowerCase().includes('pendente') ? 'pendente' : 'confirmado'
+            });
+          }
+        }
+        setTransacoes(prev => [...newTransactions, ...prev]);
+        alert(`${newTransactions.length} transações importadas com sucesso!`);
+      } catch (err) { alert('Erro ao processar o arquivo CSV.'); }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // Configuração de cores e estilos
+    const primary = [79, 70, 229]; // Indigo 600
+    const dark = [31, 41, 55]; // Gray 800
+
+    // Cabeçalho estilizado
+    doc.setFillColor(...primary);
+    doc.rect(0, 0, pageWidth, 40, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('EventMaster', pageWidth / 2, 18, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Relatório Financeiro de Fluxo de Caixa', pageWidth / 2, 28, { align: 'center' });
+
+    // Seção de Resumo
+    doc.setTextColor(...dark);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Resumo Financeiro', 15, 55);
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Saldo Consolidado: R$ ${saldo.toFixed(2)}`, 15, 65);
+    doc.text(`Total de Entradas: R$ ${entradas.toFixed(2)}`, 15, 72);
+    doc.text(`Total de Saídas: R$ ${saidas.toFixed(2)}`, 15, 79);
+    doc.text(`Valores Pendentes: R$ ${pendentes.toFixed(2)}`, 15, 86);
+
+    // Tabela de Transações
+    let y = 100;
+    doc.setFillColor(243, 244, 246);
+    doc.rect(15, y, pageWidth - 30, 10, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.text('Data', 20, y + 7);
+    doc.text('Descrição', 45, y + 7);
+    doc.text('Categoria', 110, y + 7);
+    doc.text('Tipo', 150, y + 7);
+    doc.text('Valor', 175, y + 7);
+
+    // Conteúdo da Tabela
+    y += 10;
+    doc.setFont('helvetica', 'normal');
+    filteredTransacoes.forEach((t) => {
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+      
+      doc.text(new Date(t.data + 'T00:00:00').toLocaleDateString('pt-BR'), 20, y + 7);
+      doc.text(t.descricao.substring(0, 30), 45, y + 7);
+      doc.text(t.categoria, 110, y + 7);
+      doc.text(t.tipo === 'entrada' ? 'Entrada' : 'Saída', 150, y + 7);
+      
+      // Cor dinâmica para o valor
+      doc.setTextColor(t.tipo === 'entrada' ? 16 : 239, t.tipo === 'entrada' ? 185 : 68, t.tipo === 'entrada' ? 129 : 68);
+      doc.text(`R$ ${t.valor.toFixed(2)}`, 175, y + 7);
+      doc.setTextColor(...dark);
+      y += 10;
+    });
+
+    doc.save(`fluxo_caixa_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
+  const chartData = {
+    semana: [
+      { name: 'Seg', entradas: 1200, saidas: 800 },
+      { name: 'Ter', entradas: 2100, saidas: 1100 },
+      { name: 'Qua', entradas: 800, saidas: 1500 },
+      { name: 'Qui', entradas: 1600, saidas: 1200 },
+      { name: 'Sex', entradas: 2500, saidas: 900 },
+      { name: 'Sáb', entradas: 4000, saidas: 2000 },
+      { name: 'Dom', entradas: 3200, saidas: 1800 },
+    ],
+    mes: [
+      { name: 'Semana 1', entradas: 8500, saidas: 4200 },
+      { name: 'Semana 2', entradas: 6200, saidas: 3800 },
+      { name: 'Semana 3', entradas: 9800, saidas: 5100 },
+      { name: 'Semana 4', entradas: 12000, saidas: 4500 },
+    ],
+    trimestre: [
+      { name: 'Janeiro', entradas: 32000, saidas: 18000 },
+      { name: 'Fevereiro', entradas: 28000, saidas: 15000 },
+      { name: 'Março', entradas: 35000, saidas: 22000 },
+    ]
   };
 
   const getTransactionIcon = (tipo) => {
@@ -213,12 +382,57 @@ const FluxoCaixa = () => {
           </div>
         </div>
         
-        <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-          <div className="text-center">
-            <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-            <p className="text-gray-500">Gráfico de fluxo de caixa será implementado aqui</p>
-            <p className="text-sm text-gray-400">Integração com biblioteca de gráficos</p>
-          </div>
+        <div className="h-72 w-full mt-4">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={chartData[selectedPeriod]} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorEntradas" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorSaidas" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.1}/>
+                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              <XAxis 
+                dataKey="name" 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <YAxis 
+                axisLine={false} 
+                tickLine={false} 
+                tick={{ fill: '#64748b', fontSize: 12 }}
+                tickFormatter={(value) => `R$ ${value}`}
+              />
+              <Tooltip 
+                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                formatter={(value) => [`R$ ${value.toFixed(2)}`, '']}
+              />
+              <Legend verticalAlign="top" height={36}/>
+              <Area 
+                type="monotone" 
+                dataKey="entradas" 
+                stroke="#10b981" 
+                fillOpacity={1} 
+                fill="url(#colorEntradas)" 
+                strokeWidth={3}
+                name="Entradas"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="saidas" 
+                stroke="#ef4444" 
+                fillOpacity={1} 
+                fill="url(#colorSaidas)" 
+                strokeWidth={3}
+                name="Saídas"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </motion.div>
 
@@ -231,26 +445,58 @@ const FluxoCaixa = () => {
       >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-              <option>Todas as Categorias</option>
-              <option>Eventos</option>
-              <option>Insumos</option>
-              <option>Pessoal</option>
-              <option>Transporte</option>
-              <option>Outros</option>
+            <select 
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Todas">Todas as Categorias</option>
+              <option value="Eventos">Eventos</option>
+              <option value="Insumos">Insumos</option>
+              <option value="Pessoal">Pessoal</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Outros">Outros</option>
             </select>
             
-            <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-              <option>Todos os Status</option>
-              <option>Confirmado</option>
-              <option>Pendente</option>
+            <select 
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Todos">Todos os Status</option>
+              <option value="confirmado">Confirmado</option>
+              <option value="pendente">Pendente</option>
             </select>
           </div>
 
           <div className="flex space-x-2">
-            <button className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleImportCSV} 
+              accept=".csv" 
+              className="hidden" 
+            />
+            <button 
+              onClick={handleExportPDF}
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
               <Download className="w-4 h-4 mr-2" />
-              Exportar
+              PDF
+            </button>
+            <button 
+              onClick={handleExportCSV}
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              CSV
+            </button>
+            <button 
+              onClick={() => fileInputRef.current.click()}
+              className="flex items-center px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Importar
             </button>
             <button
               onClick={() => setShowAddModal(true)}
@@ -275,7 +521,7 @@ const FluxoCaixa = () => {
         </div>
         
         <div className="divide-y divide-gray-200">
-          {transacoes.map((transacao, index) => {
+          {filteredTransacoes.map((transacao, index) => {
             const Icon = getTransactionIcon(transacao.tipo);
             return (
               <motion.div

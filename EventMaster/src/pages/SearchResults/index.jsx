@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Search, Filter, Star, MapPin, Clock, Phone, Eye } from 'lucide-react';
+import { ArrowLeft, Search, Filter, Star, MapPin, Clock, Phone, Eye, FileText, XCircle } from 'lucide-react';
 import ContactModal from '../../components/ContactModal';
 import './style.css';
 
@@ -12,6 +12,13 @@ const SearchResults = () => {
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('relevance');
   const [contactModal, setContactModal] = useState({ isOpen: false, provider: null });
+  const [budgetModal, setBudgetModal] = useState({ isOpen: false, provider: null });
+  const [budgetForm, setBudgetForm] = useState({
+    eventDate: '',
+    guests: '',
+    location: '',
+    message: ''
+  });
 
   const query = searchParams.get('query') || '';
   const type = searchParams.get('type') || 'all';
@@ -153,6 +160,17 @@ const SearchResults = () => {
 
   const handleContactService = (service) => {
     setContactModal({ isOpen: true, provider: service });
+  };
+
+  const handleRequestBudget = (service) => {
+    setBudgetModal({ isOpen: true, provider: service });
+  };
+
+  const handleBudgetSubmit = (e) => {
+    e.preventDefault();
+    alert(`Solicitação de orçamento enviada para ${budgetModal.provider.name}! O prestador responderá em breve.`);
+    setBudgetModal({ isOpen: false, provider: null });
+    setBudgetForm({ eventDate: '', guests: '', location: '', message: '' });
   };
 
   const handleViewDetails = (service) => {
@@ -298,13 +316,21 @@ const SearchResults = () => {
                         className="contact-button"
                       >
                         <Phone className="w-4 h-4" />
-                        Contatar
+                        <span>Contatar</span>
+                      </button>
+                      <button
+                        onClick={() => handleRequestBudget(service)}
+                        className="budget-button"
+                      >
+                        <FileText className="w-4 h-4" />
+                        <span>Orçamento</span>
                       </button>
                       <button
                         onClick={() => handleViewDetails(service)}
                         className="details-button"
                       >
-                        Ver Detalhes
+                        <Eye className="w-4 h-4" />
+                        <span>Detalhes</span>
                       </button>
                     </div>
                   </div>
@@ -321,6 +347,87 @@ const SearchResults = () => {
         onClose={() => setContactModal({ isOpen: false, provider: null })}
         provider={contactModal.provider}
       />
+
+      {/* Modal de Solicitação de Orçamento */}
+      {budgetModal.isOpen && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+          >
+            <div className="flex justify-between items-center p-6 border-b border-gray-200">
+              <h2 className="text-xl font-bold text-gray-900">Solicitar Orçamento</h2>
+              <button 
+                onClick={() => setBudgetModal({ isOpen: false, provider: null })} 
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-500"
+              >
+                <XCircle className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleBudgetSubmit} className="p-6 space-y-4">
+              <div className="text-sm text-gray-600 mb-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                Serviço selecionado: <strong>{budgetModal.provider.name}</strong>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Data do Evento</label>
+                  <input
+                    type="date"
+                    required
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={budgetForm.eventDate}
+                    onChange={(e) => setBudgetForm({...budgetForm, eventDate: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Nº de Convidados</label>
+                  <input
+                    type="number"
+                    required
+                    placeholder="Ex: 150"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={budgetForm.guests}
+                    onChange={(e) => setBudgetForm({...budgetForm, guests: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Local do Evento</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Cidade, bairro ou endereço do local"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={budgetForm.location}
+                  onChange={(e) => setBudgetForm({...budgetForm, location: e.target.value})}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Detalhes Adicionais</label>
+                <textarea
+                  rows="3"
+                  placeholder="Conte um pouco mais sobre o que você precisa..."
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  value={budgetForm.message}
+                  onChange={(e) => setBudgetForm({...budgetForm, message: e.target.value})}
+                ></textarea>
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl active:scale-[0.98]"
+              >
+                Enviar Solicitação
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

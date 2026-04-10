@@ -137,7 +137,7 @@ const Home = () => {
       style={{ fontSize: `${fontSize}%` }}
     >
       {/* Header com botões de navegação */}
-      <div className="absolute top-4 right-4 z-50 flex flex-wrap justify-end gap-1 items-center">
+      <div className="absolute top-2 right-2 md:top-4 md:right-4 z-50 flex flex-wrap justify-end gap-1 items-center max-w-[calc(100%-1rem)]">
         {/* Grupo unificado de Acessibilidade e Navegação */}
         <div className="flex items-center gap-1 bg-black/80 backdrop-blur-md p-1 rounded-lg border border-white/10 shadow-sm">
           <button
@@ -171,39 +171,39 @@ const Home = () => {
 
         <button
           onClick={() => navigate("/client-profile")}
-          className="px-4 py-2 bg-green-600/80 backdrop-blur-sm text-white border border-green-500/30 rounded-lg hover:bg-green-700/90 transition-all duration-200"
+          className="px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm bg-green-600/80 backdrop-blur-sm text-white border border-green-500/30 rounded-lg hover:bg-green-700/90 transition-all duration-200"
         >
           Perfil Cliente
         </button>
 
         <button
           onClick={() => navigate("/provider-profile")}
-          className="px-4 py-2 bg-purple-600/80 backdrop-blur-sm text-white border border-purple-500/30 rounded-lg hover:bg-purple-700/90 transition-all duration-200"
+          className="px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm bg-purple-600/80 backdrop-blur-sm text-white border border-purple-500/30 rounded-lg hover:bg-purple-700/90 transition-all duration-200"
         >
           Perfil Prestador
         </button>
 
         <button
           onClick={() => navigate("/cadastro")}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+          className="px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
         >
           Cadastrar
         </button>
 
         <button
           onClick={() => navigate("/login")}
-          className="px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-lg hover:bg-white/30 transition-all duration-200"
+          className="px-2 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-lg hover:bg-white/30 transition-all duration-200"
         >
           Entrar
         </button>
       </div>
 
       {/* Hero Section EventMaster */}
-      <div className="relative bg-gradient-to-r from-purple-900 to-blue-900 text-white py-24 px-4 text-center overflow-hidden">
+      <div className="relative bg-gradient-to-r from-purple-900 to-blue-900 text-white py-16 md:py-24 px-4 text-center overflow-hidden">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative z-10 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">EventMaster</h1>
-          <div className="text-xl md:text-2xl text-blue-100 mb-8">Transforme seu evento em uma experiência inesquecível. Encontre os melhores profissionais para sua festa.</div>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6 tracking-tight">EventMaster</h1>
+          <div className="text-lg md:text-2xl text-blue-100 mb-4 md:mb-8 px-4">Transforme seu evento em uma experiência inesquecível. Encontre os melhores profissionais para sua festa.</div>
         </div>
       </div>
 

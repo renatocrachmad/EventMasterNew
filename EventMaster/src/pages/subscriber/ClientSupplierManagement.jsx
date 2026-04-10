@@ -191,16 +191,16 @@ const ClientSupplierManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Gerenciar Clientes e Fornecedores</h2>
-      <p className="text-gray-600 mb-8">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Gerenciar Clientes e Fornecedores</h2>
+      <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">
         Mantenha um registro organizado dos seus clientes e fornecedores para otimizar seus eventos.
       </p>
 
-      <div className="flex border-b border-gray-200 mb-6">
+      <div className="flex border-b border-gray-200 mb-6 overflow-x-auto scrollbar-hide">
         <button
           onClick={() => setActiveTab('clients')}
-          className={`py-3 px-6 text-lg font-medium ${
+          className={`py-3 px-4 sm:px-6 text-base sm:text-lg font-medium whitespace-nowrap ${
             activeTab === 'clients'
               ? 'border-b-2 border-indigo-600 text-indigo-600'
               : 'text-gray-500 hover:text-gray-700'
@@ -210,7 +210,7 @@ const ClientSupplierManagement = () => {
         </button>
         <button
           onClick={() => setActiveTab('suppliers')}
-          className={`py-3 px-6 text-lg font-medium ${
+          className={`py-3 px-4 sm:px-6 text-base sm:text-lg font-medium whitespace-nowrap ${
             activeTab === 'suppliers'
               ? 'border-b-2 border-indigo-600 text-indigo-600'
               : 'text-gray-500 hover:text-gray-700'
